@@ -162,7 +162,7 @@ flakes %>%
          `Width (mm)` = `宽（mm）`,
          `Thickness (mm)` = `厚（mm）`,
          `Weight (mm)` = `重量（g）`,
-         `Interioir platform angle` = `IPA`) %>%
+         `Interior platform angle` = `IPA`) %>%
   mutate(typology = case_when(
     typology ==  "Kombewa" ~ "Kombewa flakes", 
     typology ==  "Surface" ~ "Surface flakes",   
@@ -181,7 +181,9 @@ bind_rows(resharpening_clean,
                                       "Kombewa flakes", 
                                       "Surface flakes", 
                                       "Resharpening flakes"))) 
-  ggplot(all_flakes_clean %>%
+  
+
+p <- ggplot(all_flakes_clean %>%
            filter(name != "Interioir platform angle")) +
   aes(typology, value) +
   geom_violin(fill = "lightgrey", alpha = 1, linewidth = 0, color = "white", adjust = 2) + 
@@ -199,9 +201,11 @@ bind_rows(resharpening_clean,
                 size = 2, 
                 small.p = TRUE,
                 contrasts = "Dunnet")
+
+lemon::reposition_legend(p, 'center', panel = 'panel-3-2')
   
   
-  ggplot(all_flakes_clean %>%
+  eggplot(all_flakes_clean %>%
            filter(name == "Interioir platform angle")) +
     aes(typology, value) +
     geom_violin(fill = "lightgrey", alpha = 1, linewidth = 0, color = "white", adjust = 2) + 

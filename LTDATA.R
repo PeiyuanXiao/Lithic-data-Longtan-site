@@ -1,4 +1,5 @@
 library("readxl")
+library("dunn.test")
 
 # import the data 
 qn_scrapers <-  read_excel("Longtan site lithic data-Quina scrapers.xlsx", skip = 1)
@@ -10,8 +11,14 @@ qn_scrapers_reduction <-  read_excel("Longtan site lithic data-Quina scrapers.xl
 qn_scrapers_Edge <-  read_excel("Longtan site lithic data-Quina scrapers.xlsx", skip = 2, sheet = "Edge")
 resharpening <- read_excel("Longtan lithic data-Reaffutage.xlsx", skip = 1)
 
+# Flakes detached from these cores show 
+# significantly smaller interior platform angle than 
+# other types of flakes
+
 kruskal.test(flakes$IPA, factor(flakes$...1))
 dunn.test(flakes$IPA, as.integer(factor(flakes$...1)), method = "bh")
+
+# quina flake dims ----------------------------------------------------------- 
 
 # set the plot text size 
 base_size_value <- 10
@@ -19,8 +26,66 @@ base_size_value <- 10
 library(tidyverse)
 library(apastats)
 library("ggpmisc")
+library(ggbeeswarm)
 
-#Integrate data
+flakes <- read_excel("Longtan site lithic data-Flakes.xlsx", skip = 0)
+resharpening <- read_excel("Longtan lithic data-Reaffutage.xlsx", skip = 1)
+
+resharpening_clean <- 
+  resharpening %>%
+  select(`Length (mm)` = ...2,
+         `Width (mm)` = `...3`,
+         `Thickness (mm)` = `...4`,
+         `Weight (mm)` = `...5`,
+         `Interior platform angle` = `IPA`,
+         `Platform length (mm)` = `Width`,
+         `Platform width (mm)` = `Depth`) %>%
+  mutate(typology = "Resharpening flakes") %>%
+  drop_na()
+
+flakes_clean <- 
+  flakes %>%
+  select(typology = ...1,
+         `Length (mm)` = `长（mm）`,
+         `Width (mm)` = `宽（mm）`,
+         `Thickness (mm)` = `厚（mm）`,
+         `Weight (mm)` = `重量（g）`,
+         `Interior platform angle` = `IPA`,
+         `Platform length (mm)` = `台面长（mm)`,
+         `Platform width (mm)` = `台面厚（mm）`) %>%
+  mutate(typology = case_when(
+    typology ==  "Kombewa" ~ "Kombewa flakes", 
+    typology ==  "Surface" ~ "Surface flakes",   
+    typology ==  "Discoid" ~ "Discoidal flakes",
+    typology ==  "Quina flake" ~ "Quina flakes",
+  )) %>%
+  drop_na() 
+
+all_flakes_clean <- 
+  bind_rows(resharpening_clean,
+            flakes_clean) 
+
+# Unretouched Quina flakes (n=15) have also been identified and 
+# show significantly larger dimensions on both the overall
+# size and the striking platform compared to other types of flakes
+
+res.man <- 
+  manova(cbind(`Length (mm)`,
+               `Width (mm)`,
+               `Thickness (mm)`,
+               `Weight (mm)`,
+               `Interior platform angle`,
+               `Platform length (mm)`,
+               `Platform width (mm)`) ~ typology, 
+         data = all_flakes_clean)
+summary(res.man)
+summary.aov(res.man)
+
+# thicknes -----------------------------------------------------
+
+# Quina scrapers are the most diagnostic type and often show 
+# significantly larger thickness values 
+
 tools_df <-
   bind_rows(
     .id = "id",
@@ -41,6 +106,10 @@ tools_df <-
   ) %>%
   drop_na()
 
+kruskal.test(Thickness ~ factor(id), data = tools_df) 
+
+#-------------------------------------------------------
+
 Resharpening_df <- 
   bind_rows(.id = "id",
             list( `Quina scrapers` = 
@@ -56,10 +125,13 @@ Resharpening_df <-
                     select(angle = EPA) %>% drop_na()
             ))
 
+# The median exterior platform angle for resharpening 
+# flakes is 71°, with no significant difference observed 
+# from the edge angle of Quina scrapers  
 
 plot_resharpening <- 
   ggplot(Resharpening_df) +
-  aes(x = id, y = angle, color = id) +
+  aes(x = id, y = angle) +
   geom_boxplot(outliers = FALSE) +
   geom_point(stat = "summary", 
              fun = "mean",
@@ -68,67 +140,17 @@ plot_resharpening <-
              color = "black",
              show.legend = FALSE) +
   geom_quasirandom(alpha = 0.2, size =3 ) +
-  scale_color_manual(values = c( "Quina scrapers" = "#EEF8B4", "Resharpening flakes" = "#CDEBB3")) +
-  scale_fill_manual(values = c( "Quina scrapers" = "#EEF8B4", "Resharpening flakes" = "#CDEBB3")) +
   xlab("") +
   ylab("Edge angle") +
   theme_minimal(base_size = base_size_value)
 
 t.test(angle ~ factor(id), data = Resharpening_df )
 
-plot_thick <- 
-ggplot(tools_df) +
-  aes(reorder(id, -Thickness), Thickness) +
-  geom_boxplot(outliers = FALSE) +
-  geom_quasirandom(alpha = 0.2, size =3) +
-  geom_point(stat = "summary", fun = "mean", shape = 19, size = 4, color = "black", show.legend = FALSE) +
-  xlab("") +
-  ylab("Thickness (mm)") +
-  theme_minimal(base_size = base_size_value)
+# quina scraper edge angle ----------------------------------------------------------
 
-  kruskal.test(Thickness ~ factor(id), data = tools_df)  
-
-library(ggbeeswarm)   
-
-tools_df %>%
-  pivot_longer(-id) %>%
-  ggplot() +
-  aes(id, value) +
-  geom_boxplot() +
-  geom_quasirandom(alpha = 0.2) +
-  facet_wrap( ~ name, scales = "free_y")
-
-
-
-giur_df <- 
-  bind_rows(.id = "id",
-            list( `Quina scraper` = 
-                    qn_scrapers_reduction %>%
-                    select(...5),
-                  Scraper = 
-                    scraper %>%
-                    select(...33)
-  )) %>%
-  mutate(giur = parse_number(...1))
-
-plot_giur <- 
-ggplot(giur_df) +
-  aes(id, giur) +
-  geom_boxplot(outliers = FALSE) + 
-  geom_quasirandom(alpha = 0.2, size =3) +
-  geom_point(stat = "summary", 
-             fun = "mean", 
-             shape = 19, 
-             size = 4, 
-             color = "black") +
-  xlab("") +
-  ylab("Mean GIUR") +
-  theme_minimal(base_size = base_size_value)
-
-ggsave(filename = "GIUR.png", plot = p, width = 6, height = 8, dpi = 800, bg = "white")
-
-wilcox.test(giur_df$giur, as.integer(factor(giur_df$id)))
-
+# Quina scrapers generally have larger edge angles 
+# (mean=70.4°; sd=7.6°), which are significantly higher
+# than that of ordinary scrapers
 
 Edge_angle_df <- 
   bind_rows(.id = "id",
@@ -147,7 +169,7 @@ Edge_angle_df <-
             ))
 
 plot_edge_angle <- 
-ggplot(Edge_angle_df) +
+  ggplot(Edge_angle_df) +
   aes(id, ave, color = ) +
   geom_boxplot(outliers = FALSE) +
   geom_point(stat = "summary", fun = "mean", shape = 19, size = 4, color = "black", show.legend = FALSE) +
@@ -156,10 +178,70 @@ ggplot(Edge_angle_df) +
   ylab("Edge angle") +
   theme_minimal(base_size = base_size_value)
 
-
 ggsave(filename = "RR.png", width = 6, height = 8, dpi = 800, bg = "white")
 
-wilcox.test(Edge_angle_df$ave, as.integer(factor(Edge_angle_df$id)) )
+t.test(ave ~ factor(id), data = Edge_angle_df) 
+
+#------------------------------------------------
+
+# the reduction intensity of Quina scrapers, the results show a 
+# median GIUR value of 0.81, significantly higher than that of 
+# ordinary scrapers
+
+giur_df <- 
+  bind_rows(.id = "id",
+            list( `Quina scraper` = 
+                    qn_scrapers_reduction %>%
+                    select(...5),
+                  Scraper = 
+                    scraper %>%
+                    select(...33)
+            )) %>%
+  mutate(giur = parse_number(...1))
+
+
+  ggplot(giur_df) +
+  aes(id, giur) +
+  geom_boxplot(outliers = FALSE) + 
+  geom_quasirandom(alpha = 0.2, size =3) +
+  geom_point(stat = "summary", 
+             fun = "mean", 
+             shape = 19, 
+             size = 4, 
+             color = "black") +
+  xlab("") +
+  ylab("Mean GIUR") +
+  theme_minimal(base_size = base_size_value)
+
+ggsave(filename = "GIUR.png", width = 6, height = 8, dpi = 800, bg = "white")
+
+t.test(giur_df$giur, as.integer(factor(giur_df$id)))
+
+
+#-------------------------------------------------
+plot_thick <- 
+ggplot(tools_df) +
+  aes(reorder(id, -Thickness), Thickness) +
+  geom_boxplot(outliers = FALSE) +
+  geom_quasirandom(alpha = 0.2, size =3) +
+  geom_point(stat = "summary", fun = "mean", shape = 19, size = 4, color = "black", show.legend = FALSE) +
+  xlab("") +
+  ylab("Thickness (mm)") +
+  theme_minimal(base_size = base_size_value)
+
+ 
+
+library(ggbeeswarm)   
+
+tools_df %>%
+  pivot_longer(-id) %>%
+  ggplot() +
+  aes(id, value) +
+  geom_boxplot() +
+  geom_quasirandom(alpha = 0.2) +
+  facet_wrap( ~ name, scales = "free_y")
+
+
 
 #combine plots into one panel
 library(cowplot)
