@@ -16,7 +16,7 @@ cores <-
          "Platform angle" = `平均台面角...41`) 
   
   
-cores_clean <-   #creat a new dataset
+cores_clean <-   #create a new dataset
   cores %>%
   select(
     Coretype,
