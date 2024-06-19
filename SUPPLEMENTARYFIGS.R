@@ -47,7 +47,7 @@ p1 <- ggplot(cores_clean, aes(x = Coretype, y = value, fill = Coretype)) +
     color = "white",
     adjust = 2
   ) +
-  stat_boxplot(geom = "errorbar", width = 0.1, size = 0.5) +
+  stat_boxplot(geom = "errorbar", width = 0.1, linewidth = 0.5) +
   geom_boxplot(
     aes(fill = Coretype),
     alpha = 1,
