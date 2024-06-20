@@ -151,18 +151,22 @@ resharpening_clean <-
          `Width (mm)` = `...3`,
          `Thickness (mm)` = `...4`,
          `Weight (mm)` = `...5`,
-         `Interioir platform angle` = `IPA`) %>%
+         `Interior platform angle` = `IPA`,
+         `Platform length (mm)` = `Width`,
+         `Platform width (mm)` = `Depth`) %>%
   mutate(typology = "Resharpening flakes") %>%
   drop_na()
 
 flakes_clean <- 
-flakes %>%
+  flakes %>%
   select(typology = ...1,
          `Length (mm)` = `长（mm）`,
          `Width (mm)` = `宽（mm）`,
          `Thickness (mm)` = `厚（mm）`,
          `Weight (mm)` = `重量（g）`,
-         `Interior platform angle` = `IPA`) %>%
+         `Interior platform angle` = `IPA`,
+         `Platform length (mm)` = `台面长（mm)`,
+         `Platform width (mm)` = `台面厚（mm）`) %>%
   mutate(typology = case_when(
     typology ==  "Kombewa" ~ "Kombewa flakes", 
     typology ==  "Surface" ~ "Surface flakes",   
@@ -172,8 +176,11 @@ flakes %>%
   drop_na() 
 
 all_flakes_clean <- 
-bind_rows(resharpening_clean,
-          flakes_clean) %>%
+  bind_rows(resharpening_clean,
+            flakes_clean)
+
+all_flakes_clean_long <- 
+  all_flakes_clean %>%
   pivot_longer(-typology) %>%
   mutate(typology = factor(typology, 
                            levels = c("Quina flakes", 
@@ -183,8 +190,8 @@ bind_rows(resharpening_clean,
                                       "Resharpening flakes"))) 
   
 
-p <- ggplot(all_flakes_clean %>%
-           filter(name != "Interioir platform angle")) +
+p <- ggplot(all_flakes_clean_long %>%
+           filter(name != "Interior platform angle")) +
   aes(typology, value) +
   geom_violin(fill = "lightgrey", alpha = 1, linewidth = 0, color = "white", adjust = 2) + 
   stat_boxplot(geom = "errorbar", width = 0.1, size = 0.5) +
@@ -201,12 +208,9 @@ p <- ggplot(all_flakes_clean %>%
                 size = 2, 
                 small.p = TRUE,
                 contrasts = "Dunnet")
-
-lemon::reposition_legend(p, 'center', panel = 'panel-3-2')
   
-  
-  eggplot(all_flakes_clean %>%
-           filter(name == "Interioir platform angle")) +
+  ggplot(all_flakes_clean_long %>%
+           filter(name == "Interior platform angle")) +
     aes(typology, value) +
     geom_violin(fill = "lightgrey", alpha = 1, linewidth = 0, color = "white", adjust = 2) + 
     stat_boxplot(geom = "errorbar", width = 0.1, size = 0.5) +

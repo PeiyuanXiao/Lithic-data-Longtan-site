@@ -200,7 +200,7 @@ giur_df <-
   mutate(giur = parse_number(...1))
 
 
-  ggplot(giur_df) +
+plot_giur <- ggplot(giur_df) +
   aes(id, giur) +
   geom_boxplot(outliers = FALSE) + 
   geom_quasirandom(alpha = 0.2, size =3) +
