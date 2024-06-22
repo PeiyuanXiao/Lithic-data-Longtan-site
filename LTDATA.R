@@ -1,5 +1,6 @@
 library("readxl")
 library("dunn.test")
+library("MetBrewer")
 
 # import the data 
 qn_scrapers <-  read_excel("Longtan site lithic data-Quina scrapers.xlsx", skip = 1)
@@ -18,7 +19,7 @@ resharpening <- read_excel("Longtan lithic data-Reaffutage.xlsx", skip = 1)
 kruskal.test(flakes$IPA, factor(flakes$...1))
 dunn.test(flakes$IPA, as.integer(factor(flakes$...1)), method = "bh")
 
-# quina flake dims ----------------------------------------------------------- 
+# Quina flake dims ----------------------------------------------------------- 
 
 # set the plot text size 
 base_size_value <- 10
@@ -108,7 +109,7 @@ tools_df <-
 
 kruskal.test(Thickness ~ factor(id), data = tools_df) 
 
-#-------------------------------------------------------
+# Resharpening-------------------------------------------------------
 
 Resharpening_df <- 
   bind_rows(.id = "id",
@@ -131,22 +132,27 @@ Resharpening_df <-
 
 plot_resharpening <- 
   ggplot(Resharpening_df) +
-  aes(x = id, y = angle) +
+  aes(x = id, 
+      y = angle,
+      color = id) +
   geom_boxplot(outliers = FALSE) +
+  geom_quasirandom(alpha = 0.2, 
+                   size =1.5) +
   geom_point(stat = "summary", 
-             fun = "mean",
+             fun = "mean", 
              shape = 19, 
-             size = 4, 
-             color = "black",
+             size = 2.5, 
+             color = "black", 
              show.legend = FALSE) +
-  geom_quasirandom(alpha = 0.2, size =3 ) +
+  scale_color_manual(values = c(met.brewer("Nattier", 4)[1:2])) +
   xlab("") +
-  ylab("Edge angle") +
-  theme_minimal(base_size = base_size_value)
+  ylab("Edge angle & EPA") +
+  theme_minimal(base_size = base_size_value) +
+  theme(legend.position = "none")
 
 t.test(angle ~ factor(id), data = Resharpening_df )
 
-# quina scraper edge angle ----------------------------------------------------------
+# Quina scraper edge angle ----------------------------------------------------------
 
 # Quina scrapers generally have larger edge angles 
 # (mean=70.4°; sd=7.6°), which are significantly higher
@@ -169,20 +175,28 @@ Edge_angle_df <-
             ))
 
 plot_edge_angle <- 
-  ggplot(Edge_angle_df) +
-  aes(id, ave, color = ) +
+  ggplot(Edge_angle_df, 
+         aes(x = id, y = ave, color = id)) +
   geom_boxplot(outliers = FALSE) +
-  geom_point(stat = "summary", fun = "mean", shape = 19, size = 4, color = "black", show.legend = FALSE) +
-  geom_quasirandom(alpha = 0.2, size =3) +
+  geom_quasirandom(alpha = 0.2, 
+                   size =1.5) +
+  geom_point(stat = "summary", 
+             fun = "mean", 
+             shape = 19, 
+             size = 2.5, 
+             color = "black", 
+             show.legend = FALSE) +
+  scale_color_manual(values = c(met.brewer("Nattier", 4)[1:2])) +
   xlab("") +
   ylab("Edge angle") +
-  theme_minimal(base_size = base_size_value)
+  theme_minimal(base_size = base_size_value) +
+  theme(legend.position = "none")
 
 ggsave(filename = "RR.png", width = 6, height = 8, dpi = 800, bg = "white")
 
 t.test(ave ~ factor(id), data = Edge_angle_df) 
 
-#------------------------------------------------
+# Reduction intensity------------------------------------------------
 
 # the reduction intensity of Quina scrapers, the results show a 
 # median GIUR value of 0.81, significantly higher than that of 
@@ -200,34 +214,55 @@ giur_df <-
   mutate(giur = parse_number(...1))
 
 
-plot_giur <- ggplot(giur_df) +
-  aes(id, giur) +
-  geom_boxplot(outliers = FALSE) + 
-  geom_quasirandom(alpha = 0.2, size =3) +
+plot_giur <- 
+  ggplot(giur_df) +
+  aes(id, giur, color = id) +
+  geom_boxplot(outliers = FALSE) +
+  geom_quasirandom(alpha = 0.2, 
+                   size =1.5) +
   geom_point(stat = "summary", 
              fun = "mean", 
              shape = 19, 
-             size = 4, 
-             color = "black") +
+             size = 2.5, 
+             color = "black", 
+             show.legend = FALSE) +
+  scale_color_manual(values = c(met.brewer("Nattier", 4)[1:2])) +
   xlab("") +
   ylab("Mean GIUR") +
-  theme_minimal(base_size = base_size_value)
+  theme_minimal(base_size = base_size_value) +
+  theme(legend.position = "none")
 
 ggsave(filename = "GIUR.png", width = 6, height = 8, dpi = 800, bg = "white")
 
 t.test(giur_df$giur, as.integer(factor(giur_df$id)))
 
 
-#-------------------------------------------------
+# Thickness-------------------------------------------------
+
+tools_df$id <- factor(tools_df$id, levels = c("Quina scraper", 
+                                              "Scraper", 
+                                              "Denticulate", 
+                                              "Notch"))
+
 plot_thick <- 
 ggplot(tools_df) +
-  aes(reorder(id, -Thickness), Thickness) +
+  aes(reorder(id, -Thickness), 
+      Thickness, 
+      color = id) +
   geom_boxplot(outliers = FALSE) +
-  geom_quasirandom(alpha = 0.2, size =3) +
-  geom_point(stat = "summary", fun = "mean", shape = 19, size = 4, color = "black", show.legend = FALSE) +
+  geom_quasirandom(alpha = 0.2, size =1.5) +
+  geom_point(stat = "summary", 
+             fun = "mean", 
+             shape = 19, 
+             size = 2.5, 
+             color = "black", 
+             show.legend = FALSE) +
+  scale_color_manual(values = c(met.brewer("Nattier", 4))) +
   xlab("") +
   ylab("Thickness (mm)") +
-  theme_minimal(base_size = base_size_value)
+  theme_minimal(base_size = base_size_value) +
+  theme(legend.position = "none")
+  
 
  
 
