@@ -250,11 +250,12 @@ ggplot(all_flakes_clean_long %>%
   scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
   stat_multcomp(geom = "text_pairwise",
                 size = 2, 
-                small.p = TRUE,
+                small.p = F,
                 contrasts = "Dunnet") +
-  labs(fill = "Typology")
+  labs(fill = "Typology") +
+  theme(legend.position = "none", axis.title.x = element_blank(),axis.text.x = element_text(size = 8))
 
-ggsave(filename = "Flake_size.png", width = 8, height = 6, dpi = 800, bg = "white")
+ggsave(filename = "Flake_size.png", width = 13, height = 9, dpi = 800, bg = "white")
 
 # IPA in flakes with statistics test 
   
@@ -291,12 +292,13 @@ ggplot(all_flakes_clean_long %>%
     scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
     stat_multcomp(geom = "text_pairwise",
                   size = 2, 
-                  small.p = TRUE,
+                  small.p = F,
                   contrasts = rbind(c(0, 0, 0, -1, 1),
                                     c(0, 0, -1, 1, 0),
                                     c(0, -1, 0, 1, 0),
                                     c(-1, 0, 0, 1, 0))) +
-    labs(fill = "Typology")
+    labs(fill = "Typology") +
+  theme(legend.position = "none", axis.title.x = element_blank())
 
 ggsave(filename = "Flake_IPA.png", width = 8, height = 6, dpi = 800, bg = "white")
   
