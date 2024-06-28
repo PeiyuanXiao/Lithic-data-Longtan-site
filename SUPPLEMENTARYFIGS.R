@@ -41,7 +41,7 @@ cores_clean <-
   mutate(name = factor(name, levels = c("Length (mm)", 
                                         "Width (mm)", 
                                         "Thickness (mm)", 
-                                        "Weight (g)"))) %>%
+                                        "Weight (g)")))
 
 # Overall size of cores  
   
@@ -90,6 +90,8 @@ ggplot(cores_clean,
   theme_classic() +
   theme(legend.position = "none", axis.title.x = element_blank()) +
   ylab("")
+
+ggsave(filename = "Core_size.png", width = 8, height = 6, dpi = 800, bg = "white")
 
 # Platform angle of cores  
 
@@ -148,6 +150,8 @@ ggplot(cores_angle, aes(x = Coretype, y = `Platform angle`, fill = Coretype)) +
   theme_classic() +
   theme(legend.position = "none", axis.title.x = element_blank())
 
+ggsave(filename = "Core_PA.png", width = 8, height = 6, dpi = 800, bg = "white")
+
 # Flakes------------------------------------------------------------------------
 
 flakes <- read_excel("Longtan site lithic data-Flakes.xlsx", skip = 0)
@@ -158,7 +162,7 @@ resharpening_clean <-
   select(`Length (mm)` = ...2,
          `Width (mm)` = `...3`,
          `Thickness (mm)` = `...4`,
-         `Weight (mm)` = `...5`,
+         `Weight (g)` = `...5`,
          `Interior platform angle` = `IPA`,
          `Platform length (mm)` = `Width`,
          `Platform width (mm)` = `Depth`) %>%
@@ -189,8 +193,16 @@ all_flakes_clean <-
 
 all_flakes_clean_long <- 
   all_flakes_clean %>%
-  pivot_longer(-typology) %>%
-  mutate(Typology = factor(typology, 
+  select(c("Typology",
+           "Length (mm)", 
+           "Width (mm)", 
+           "Thickness (mm)", 
+           "Weight (g)", 
+           "Interior platform angle", 
+           "Platform length (mm)", 
+           "Platform width (mm)")) %>%
+  pivot_longer(-Typology) %>%
+  mutate(Typology = factor(Typology, 
                            levels = c("Quina flakes", 
                                       "Discoidal flakes", 
                                       "Kombewa flakes", 
@@ -199,18 +211,41 @@ all_flakes_clean_long <-
 
 # Overall size in flakes with statistics test   
 
-p <- ggplot(all_flakes_clean_long %>%
+ggplot(all_flakes_clean_long %>%
            filter(name != "Interior platform angle")) +
   aes(Typology, value) +
-  geom_violin(fill = "lightgrey", alpha = 1, linewidth = 0, color = "white", adjust = 2) + 
-  stat_boxplot(geom = "errorbar", width = 0.1, size = 0.5) +
-  geom_boxplot(aes(fill = typology), alpha = 1, linewidth = 0.5, color = "black", width = 0.4) + 
-  geom_point(stat = "summary", fun = "mean", shape = 19, size = 2, color = "black", show.legend = FALSE) +
+  geom_violin(fill = "lightgrey", 
+              alpha = 1,
+              linewidth = 0, 
+              color = "white", 
+              adjust = 2) + 
+  stat_boxplot(geom = "errorbar", 
+               width = 0.1, 
+               size = 0.5) +
+  geom_boxplot(aes(fill = Typology), 
+               alpha = 1, 
+               linewidth = 0.5, 
+               color = "black", 
+               width = 0.4) + 
+  geom_point(stat = "summary", 
+             fun = "mean", 
+             shape = 19, 
+             size = 2,
+             color = "black", 
+             show.legend = FALSE) +
   facet_wrap( ~ name, scales = "free_y") +
   ylab("") +
   xlab("") +
-  scale_fill_manual(values = c( "Kombewa flakes" = "#30A5C2", "Surface flakes" = "#CDEBB3", "Quina flakes" = "#21318C", "Discoidal flakes" = "#1E80B8","Resharpening flakes" = "#EEF8B4" )) +
-  scale_color_manual(values = c( "Kombewa flakes" = "#30A5C2", "Surface flakes" = "#CDEBB3", "Quina flakes" = "#21318C", "Discoidal flakes" = "#1E80B8","Resharpening flakes" = "#EEF8B4")) +
+  scale_fill_manual(values = c( "Kombewa flakes" = "#30A5C2", 
+                                "Surface flakes" = "#CDEBB3", 
+                                "Quina flakes" = "#21318C", 
+                                "Discoidal flakes" = "#1E80B8",
+                                "Resharpening flakes" = "#EEF8B4" )) +
+  scale_color_manual(values = c( "Kombewa flakes" = "#30A5C2", 
+                                 "Surface flakes" = "#CDEBB3", 
+                                 "Quina flakes" = "#21318C", 
+                                 "Discoidal flakes" = "#1E80B8",
+                                 "Resharpening flakes" = "#EEF8B4")) +
   theme_classic() +
   scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
   stat_multcomp(geom = "text_pairwise",
@@ -218,6 +253,8 @@ p <- ggplot(all_flakes_clean_long %>%
                 small.p = TRUE,
                 contrasts = "Dunnet") +
   labs(fill = "Typology")
+
+ggsave(filename = "Flake_size.png", width = 8, height = 6, dpi = 800, bg = "white")
 
 # IPA in flakes with statistics test 
   
@@ -227,7 +264,7 @@ ggplot(all_flakes_clean_long %>%
     geom_violin(fill = "lightgrey", 
                 alpha = 1, linewidth = 0, color = "white", adjust = 2) + 
     stat_boxplot(geom = "errorbar", width = 0.1, size = 0.5) +
-    geom_boxplot(aes(fill = typology), 
+    geom_boxplot(aes(fill = Typology), 
                  alpha = 1, 
                  linewidth = 0.5, 
                  color = "black", 
@@ -260,6 +297,8 @@ ggplot(all_flakes_clean_long %>%
                                     c(0, -1, 0, 1, 0),
                                     c(-1, 0, 0, 1, 0))) +
     labs(fill = "Typology")
+
+ggsave(filename = "Flake_IPA.png", width = 8, height = 6, dpi = 800, bg = "white")
   
 # Staked chart for platform types in flakes  
   
@@ -312,7 +351,7 @@ ppt <- ggplot(data = flake_platform_type %>%
       "Natural" = "#EEF8B4",
       "Linear" = "#CDEBB3",
       "Plain" = "#21318C")) +
-  theme_minimal() +
+  theme_classic() +
   theme(legend.position = "right") +
   coord_flip() +
   guides(fill = guide_legend("Platform types")) +
@@ -375,13 +414,15 @@ pdsp <- ggplot(data = flake_dsp_type %>%
       "Unidentified" = "#FFD082",
       "Centripetal" = "#EEF8B4",
       "Proximal only" = "#21318C")) +
-  theme_minimal() +
+  theme_classic() +
   theme(legend.position = "right") +
   coord_flip() +
   guides(fill = guide_legend("Dorsal scar pattern")) +
   xlab("") + ylab("Count") 
 
 ppt / pdsp
+
+ggsave(filename = "Stacked_chart_flakes.png", width = 8, height = 6, dpi = 800, bg = "white")
 
 # Tools-------------------------------------------------------------------------
 
@@ -392,7 +433,8 @@ denticulate <- read_excel("Longtan site lithic data-Tools.xlsx", skip = 1, sheet
 Misc <- read_excel("Longtan site lithic data-Tools.xlsx", skip = 0, sheet = "Miscellaneous tools")
 
  
-  bind_rows(
+ Tools_clean <- 
+   bind_rows(
     .id = "id",
     list(
       `Quina scraper` =
@@ -424,7 +466,7 @@ Misc <- read_excel("Longtan site lithic data-Tools.xlsx", skip = 0, sheet = "Mis
     name == "Length" ~ "Length (mm)",
     name == "Breadth" ~ "Width (mm)",
     name == "Thickness" ~ "Thickness (mm)",
-    name == "Weight" ~ "Weight (mm)"
+    name == "Weight" ~ "Weight (g)"
   )) %>%
   mutate(id = factor(id, levels = c("Quina scrapers",
                                     "Scrapers",
@@ -434,11 +476,11 @@ Misc <- read_excel("Longtan site lithic data-Tools.xlsx", skip = 0, sheet = "Mis
   mutate(name = factor(name, levels = c("Length (mm)", 
                                         "Width (mm)", 
                                         "Thickness (mm)", 
-                                        "Weight (mm)"))) %>%
+                                        "Weight (g)")))
     
 # Overall size of Tools  
 
-ggplot() +
+ggplot(Tools_clean) +
   aes(id, value)+
   geom_violin(
     fill = "lightgrey",
@@ -484,6 +526,8 @@ ggplot() +
   ylab("") +
   theme(legend.position = "none", axis.title.x = element_blank()) +
   scale_x_discrete(guide = guide_axis(n.dodge = 2)) 
+
+ggsave(filename = "Tool_size.png", width = 8, height = 6, dpi = 800, bg = "white")
   
 
 
