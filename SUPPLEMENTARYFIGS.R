@@ -575,8 +575,13 @@ ggplot(Tools_clean) +
   theme(legend.position = "none", axis.title.x = element_blank()) +
   scale_x_discrete(guide = guide_axis(n.dodge = 2)) 
 
+<<<<<<< HEAD
 ggsave(filename = "Tool_size.png", width = 8, height = 6, dpi = 600, bg = "white")
 
+=======
+ggsave(filename = "Tool_size.png", width = 8, height = 6, dpi = 800, bg = "white")
+  
+>>>>>>> 87e1b99ef01852ad6c34c2ba7aa1ed90d083084c
 # Sites to river distance-------------------------------------------------------------------------
 
 Site_river_distance <- read_excel("Site_river_distance.xlsx", skip = 0) %>%
@@ -599,6 +604,7 @@ ggplot(Site_river_distance) +
        y = "Distance (m)")
 
 ggsave(filename = "Site_river_distance.png", width = 3, height = 5, dpi = 400, bg = "white")
+<<<<<<< HEAD
 
 
 
@@ -645,6 +651,8 @@ ggsave(filename = "Site_river_distance.png", width = 3, height = 5, dpi = 400, b
 
 
 
+=======
+>>>>>>> 87e1b99ef01852ad6c34c2ba7aa1ed90d083084c
 
 
 
