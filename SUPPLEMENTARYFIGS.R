@@ -5,7 +5,7 @@ library(forcats)
 library(patchwork)
 
 # Cores-------------------------------------------------------------------------------
- 
+
 cores <- 
   read_excel("Longtan site lithic data-Cores.xlsx", skip = 1) %>%
   filter(...1 %in% c('Quina core', 'Discoid', 'C-O-F', 'Surface core')) %>%
@@ -15,15 +15,15 @@ cores <-
          "Thickness (mm)" = `厚（mm）`,
          "Weight (g)" = `重量`,
          "Platform angle" = `平均台面角...41`) 
-  
+
 cores_clean <-   
   cores %>%
   select(
     Coretype,
     `Length (mm)` ,
-         `Width (mm)`,
-         `Thickness (mm)`,
-         `Weight (g)`,
+    `Width (mm)`,
+    `Thickness (mm)`,
+    `Weight (g)`,
   ) %>%
   mutate(Coretype = case_when(
     Coretype ==  "Quina core" ~ "Quina cores", 
@@ -44,9 +44,9 @@ cores_clean <-
                                         "Weight (g)")))
 
 # Overall size of cores  
-  
+
 ggplot(cores_clean, 
-      aes(x = Coretype, y = value, fill = Coretype)) +
+       aes(x = Coretype, y = value, fill = Coretype)) +
   geom_violin(
     fill = "lightgrey",
     alpha = 1,
@@ -87,11 +87,19 @@ ggplot(cores_clean,
     )
   ) +
   facet_wrap(~ name, scales = "free_y") +   
-  theme_classic() +
-  theme(legend.position = "none", axis.title.x = element_blank()) +
+  theme_bw() +
+  theme(legend.position = "none", 
+        axis.title.x = element_blank()) +
+  theme(axis.text.x = element_text(size = 13),
+        axis.text.y = element_text(size = 13),
+        axis.title.y = element_text(size = 14),
+        strip.text = element_text(size = 14),
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_line(color = "white")) +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
   ylab("")
 
-ggsave(filename = "Core_size.png", width = 8, height = 6, dpi = 800, bg = "white")
+ggsave(filename = "Core_size.png", width = 8, height = 6, dpi = 600, bg = "white")
 
 # Platform angle of cores  
 
@@ -147,10 +155,16 @@ ggplot(cores_angle, aes(x = Coretype, y = `Platform angle`, fill = Coretype)) +
       "Discoidal cores" = "#1E80B8"
     )
   ) +
-  theme_classic() +
-  theme(legend.position = "none", axis.title.x = element_blank())
+  theme_bw() +
+  theme(axis.text.x = element_text(size = 14),
+        axis.text.y = element_text(size = 14),
+        axis.title.y = element_text(size = 16),
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_line(color = "white")) +
+  theme(legend.position = "none", axis.title.x = element_blank()) +
+  ylab("Platform angle (°)")
 
-ggsave(filename = "Core_PA.png", width = 8, height = 6, dpi = 800, bg = "white")
+ggsave(filename = "Core_PA.png", width = 8, height = 6, dpi = 600, bg = "white")
 
 # Flakes------------------------------------------------------------------------
 
@@ -212,7 +226,7 @@ all_flakes_clean_long <-
 # Overall size in flakes with statistics test   
 
 ggplot(all_flakes_clean_long %>%
-           filter(name != "Interior platform angle")) +
+         filter(name != "Interior platform angle")) +
   aes(Typology, value) +
   geom_violin(fill = "lightgrey", 
               alpha = 1,
@@ -246,72 +260,86 @@ ggplot(all_flakes_clean_long %>%
                                  "Quina flakes" = "#21318C", 
                                  "Discoidal flakes" = "#1E80B8",
                                  "Resharpening flakes" = "#EEF8B4")) +
-  theme_classic() +
+  theme_bw() +
+  theme(axis.text.x = element_text(size = 12),
+        axis.text.y = element_text(size = 13),
+        axis.title.y = element_text(size = 14),
+        strip.text = element_text(size = 14),
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_line(color = "white")) +
   scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
   stat_multcomp(geom = "text_pairwise",
-                size = 2, 
+                size = 3, 
                 small.p = F,
                 contrasts = "Dunnet") +
   labs(fill = "Typology") +
-  theme(legend.position = "none", axis.title.x = element_blank(),axis.text.x = element_text(size = 8))
+  theme(legend.position = "none", 
+        axis.title.x = element_blank())
 
-ggsave(filename = "Flake_size.png", width = 13, height = 9, dpi = 800, bg = "white")
+ggsave(filename = "Flake_size.png", width = 15, height = 12, dpi = 600, bg = "white")
 
 # IPA in flakes with statistics test 
-  
-ggplot(all_flakes_clean_long %>%
-           filter(name == "Interior platform angle")) +
-    aes(Typology, value) +
-    geom_violin(fill = "lightgrey", 
-                alpha = 1, linewidth = 0, color = "white", adjust = 2) + 
-    stat_boxplot(geom = "errorbar", width = 0.1, size = 0.5) +
-    geom_boxplot(aes(fill = Typology), 
-                 alpha = 1, 
-                 linewidth = 0.5, 
-                 color = "black", 
-                 width = 0.4) + 
-    geom_point(stat = "summary", 
-               fun = "mean", 
-               shape = 19, 
-               size = 2, 
-               color = "black", 
-               show.legend = FALSE) +
-    ylab("Interior platform angle") +
-    xlab("") +
-    scale_fill_manual(values = c( "Kombewa flakes" = "#30A5C2", 
-                                  "Surface flakes" = "#CDEBB3", 
-                                  "Quina flakes" = "#21318C", 
-                                  "Discoidal flakes" = "#1E80B8",
-                                  "Resharpening flakes" = "#EEF8B4" )) +
-    scale_color_manual(values = c( "Kombewa flakes" = "#30A5C2", 
-                                   "Surface flakes" = "#CDEBB3", 
-                                   "Quina flakes" = "#21318C", 
-                                   "Discoidal flakes" = "#1E80B8",
-                                   "Resharpening flakes" = "#EEF8B4")) +
-    theme_classic() +
-    scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
-    stat_multcomp(geom = "text_pairwise",
-                  size = 2, 
-                  small.p = F,
-                  contrasts = rbind(c(0, 0, 0, -1, 1),
-                                    c(0, 0, -1, 1, 0),
-                                    c(0, -1, 0, 1, 0),
-                                    c(-1, 0, 0, 1, 0))) +
-    labs(fill = "Typology") +
-  theme(legend.position = "none", axis.title.x = element_blank())
 
-ggsave(filename = "Flake_IPA.png", width = 8, height = 6, dpi = 800, bg = "white")
-  
+ggplot(all_flakes_clean_long %>%
+         filter(name == "Interior platform angle")) +
+  aes(Typology, value) +
+  geom_violin(fill = "lightgrey", 
+              alpha = 1, linewidth = 0, color = "white", adjust = 2) + 
+  stat_boxplot(geom = "errorbar", width = 0.1, size = 0.5) +
+  geom_boxplot(aes(fill = Typology), 
+               alpha = 1, 
+               linewidth = 0.5, 
+               color = "black", 
+               width = 0.4) + 
+  geom_point(stat = "summary", 
+             fun = "mean", 
+             shape = 19, 
+             size = 2, 
+             color = "black", 
+             show.legend = FALSE) +
+  ylab("Interior platform angle") +
+  xlab("") +
+  scale_fill_manual(values = c( "Kombewa flakes" = "#30A5C2", 
+                                "Surface flakes" = "#CDEBB3", 
+                                "Quina flakes" = "#21318C", 
+                                "Discoidal flakes" = "#1E80B8",
+                                "Resharpening flakes" = "#EEF8B4" )) +
+  scale_color_manual(values = c( "Kombewa flakes" = "#30A5C2", 
+                                 "Surface flakes" = "#CDEBB3", 
+                                 "Quina flakes" = "#21318C", 
+                                 "Discoidal flakes" = "#1E80B8",
+                                 "Resharpening flakes" = "#EEF8B4")) +
+  theme_bw() +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  theme(axis.text.x = element_text(size = 15),
+        axis.text.y = element_text(size = 13),
+        axis.title.y = element_text(size = 14),
+        strip.text = element_text(size = 14),
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_line(color = "white")) +
+  stat_multcomp(geom = "text_pairwise",
+                size = 4, 
+                small.p = F,
+                contrasts = rbind(c(0, 0, 0, -1, 1),
+                                  c(0, 0, -1, 1, 0),
+                                  c(0, -1, 0, 1, 0),
+                                  c(-1, 0, 0, 1, 0))) +
+  labs(fill = "Typology") +
+  theme(legend.position = "none", axis.title.x = element_blank()) +
+  ylab("Interior platform angle (°)")
+
+ggsave(filename = "Flake_IPA.png", width = 8.5, height = 6, dpi = 800, bg = "white")
+
 # Staked chart for platform types in flakes  
-  
+
 flake_platform_type <- 
   bind_rows(.id = "id",
-    flakes = flakes %>%
-      select(`Platform type` = `台面类型`,
-             `Flake type` = `...1`),
-     resharpening = resharpening %>% 
-      select(`Platform type` = `Type`) %>%
-      mutate(`Flake type` = "Resharpening")
+            flakes = flakes %>%
+              select(`Platform type` = `台面类型`,
+                     `Flake type` = `...1`),
+            resharpening = resharpening %>% 
+              select(`Platform type` = `Type`) %>%
+              mutate(`Flake type` = "Resharpening")
   ) %>%
   mutate(`Flake type` = case_when(
     `Flake type` ==  "Kombewa" ~ "Kombewa flakes", 
@@ -331,19 +359,19 @@ flake_platform_type <-
   drop_na(`Platform type`)
 
 ppt <- ggplot(data = flake_platform_type %>%
-         mutate(`Flake type` = fct_infreq(`Flake type`),
-                `Platform type` = factor(`Platform type`, 
-                                         levels = c("Plain", 
-                                                    "Dihedral", 
-                                                    "Faceted", 
-                                                    "Linear", 
-                                                    "Natural"))) %>%
-         group_by(`Platform type`) %>%
-         count(`Flake type`), 
-       aes(`Flake type`,
-           n,
-           group = `Platform type`,
-           fill = `Platform type`)) +
+                mutate(`Flake type` = fct_infreq(`Flake type`),
+                       `Platform type` = factor(`Platform type`, 
+                                                levels = c("Plain", 
+                                                           "Dihedral", 
+                                                           "Faceted", 
+                                                           "Linear", 
+                                                           "Natural"))) %>%
+                group_by(`Platform type`) %>%
+                count(`Flake type`), 
+              aes(`Flake type`,
+                  n,
+                  group = `Platform type`,
+                  fill = `Platform type`)) +
   geom_col() +
   geom_hline(yintercept = 0) +
   scale_fill_manual(
@@ -353,7 +381,13 @@ ppt <- ggplot(data = flake_platform_type %>%
       "Natural" = "#EEF8B4",
       "Linear" = "#CDEBB3",
       "Plain" = "#21318C")) +
-  theme_classic() +
+  theme_bw() +
+  theme(axis.text.x = element_text(size = 15),
+        axis.text.y = element_text(size = 13),
+        axis.title.y = element_text(size = 14),
+        strip.text = element_text(size = 14),
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_line(color = "white")) +
   theme(legend.position = "right") +
   coord_flip() +
   guides(fill = guide_legend("Platform types")) +
@@ -392,20 +426,20 @@ flake_dsp_type <-
   drop_na(`Dorsal scar pattern`)
 
 pdsp <- ggplot(data = flake_dsp_type %>%
-         mutate(`Flake type` = fct_infreq(`Flake type`),
-                `Dorsal scar pattern` = factor(`Dorsal scar pattern`, 
-                                         levels = c("Proximal only", 
-                                                    "Distal only", 
-                                                    "Lateral", 
-                                                    "Multi direction", 
-                                                    "Centripetal",
-                                                    "Unidentified"))) %>%
-         group_by(`Dorsal scar pattern`) %>%
-         count(`Flake type`), 
-       aes(`Flake type`,
-           n,
-           group = `Dorsal scar pattern`,
-           fill = `Dorsal scar pattern`)) +
+                 mutate(`Flake type` = fct_infreq(`Flake type`),
+                        `Dorsal scar pattern` = factor(`Dorsal scar pattern`, 
+                                                       levels = c("Proximal only", 
+                                                                  "Distal only", 
+                                                                  "Lateral", 
+                                                                  "Multi direction", 
+                                                                  "Centripetal",
+                                                                  "Unidentified"))) %>%
+                 group_by(`Dorsal scar pattern`) %>%
+                 count(`Flake type`), 
+               aes(`Flake type`,
+                   n,
+                   group = `Dorsal scar pattern`,
+                   fill = `Dorsal scar pattern`)) +
   geom_col() +
   geom_hline(yintercept = 0) +
   scale_fill_manual(
@@ -416,7 +450,13 @@ pdsp <- ggplot(data = flake_dsp_type %>%
       "Unidentified" = "#FFD082",
       "Centripetal" = "#EEF8B4",
       "Proximal only" = "#21318C")) +
-  theme_classic() +
+  theme_bw() +
+  theme(axis.text.x = element_text(size = 15),
+        axis.text.y = element_text(size = 13),
+        axis.title.y = element_text(size = 14),
+        strip.text = element_text(size = 14),
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_line(color = "white")) +
   theme(legend.position = "right") +
   coord_flip() +
   guides(fill = guide_legend("Dorsal scar pattern")) +
@@ -434,9 +474,9 @@ notch <- read_excel("Longtan site lithic data-Tools.xlsx", skip = 1, sheet = "No
 denticulate <- read_excel("Longtan site lithic data-Tools.xlsx", skip = 1, sheet = "Denticulates")
 Misc <- read_excel("Longtan site lithic data-Tools.xlsx", skip = 0, sheet = "Miscellaneous tools")
 
- 
- Tools_clean <- 
-   bind_rows(
+
+Tools_clean <- 
+  bind_rows(
     .id = "id",
     list(
       `Quina scraper` =
@@ -457,13 +497,13 @@ Misc <- read_excel("Longtan site lithic data-Tools.xlsx", skip = 0, sheet = "Mis
     )) %>%
   drop_na() %>%
   pivot_longer(-id) %>%
-    mutate(id = case_when(
-      id == "Quina scraper" ~ "Quina scrapers",
-      id == "Scraper" ~ "Scrapers",
-      id == "Notch" ~ "Notches",
-      id == "Denticulate" ~ "Denticulates",
-      id == "Misc" ~ "Misc"
-      )) %>%
+  mutate(id = case_when(
+    id == "Quina scraper" ~ "Quina scrapers",
+    id == "Scraper" ~ "Scrapers",
+    id == "Notch" ~ "Notches",
+    id == "Denticulate" ~ "Denticulates",
+    id == "Misc" ~ "Misc"
+  )) %>%
   mutate(name = case_when(
     name == "Length" ~ "Length (mm)",
     name == "Breadth" ~ "Width (mm)",
@@ -479,7 +519,7 @@ Misc <- read_excel("Longtan site lithic data-Tools.xlsx", skip = 0, sheet = "Mis
                                         "Width (mm)", 
                                         "Thickness (mm)", 
                                         "Weight (g)")))
-    
+
 # Overall size of Tools  
 
 ggplot(Tools_clean) +
@@ -524,13 +564,74 @@ ggplot(Tools_clean) +
       "Misc" = "#EEF8B4"
     )) +
   facet_wrap(~name, scales = "free_y") +
-  theme_classic() +
+  theme_bw() +
+  theme(axis.text.x = element_text(size = 13),
+        axis.text.y = element_text(size = 13),
+        axis.title.y = element_text(size = 14),
+        strip.text = element_text(size = 14),
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_line(color = "white")) +
   ylab("") +
   theme(legend.position = "none", axis.title.x = element_blank()) +
   scale_x_discrete(guide = guide_axis(n.dodge = 2)) 
 
-ggsave(filename = "Tool_size.png", width = 8, height = 6, dpi = 800, bg = "white")
-  
+ggsave(filename = "Tool_size.png", width = 8, height = 6, dpi = 600, bg = "white")
+
+# Sites to river distance-------------------------------------------------------------------------
+
+Site_river_distance <- read_excel("Site_river_distance.xlsx", skip = 0) %>%
+  mutate(Site = factor(Site, levels = c("Guanshan", 
+                                        "Longtan", 
+                                        "Tianhuadong",
+                                        "Dazhuang",
+                                        "Songping")))
+
+ggplot(Site_river_distance) +
+  aes(Site, Distance)+
+  geom_bar(stat = "identity") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 13), 
+        axis.text.y = element_text(size = 13),
+        axis.title.y = element_text(size = 14),
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_line(color = "white")) +
+  labs(x = "",
+       y = "Distance (m)")
+
+ggsave(filename = "Site_river_distance.png", width = 3, height = 5, dpi = 400, bg = "white")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
