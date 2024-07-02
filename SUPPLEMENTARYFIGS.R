@@ -531,19 +531,28 @@ ggplot(Tools_clean) +
 
 ggsave(filename = "Tool_size.png", width = 8, height = 6, dpi = 800, bg = "white")
   
+# Sites to river distance-------------------------------------------------------------------------
 
+Site_river_distance <- read_excel("Site_river_distance.xlsx", skip = 0) %>%
+  mutate(Site = factor(Site, levels = c("Guanshan", 
+                                        "Longtan", 
+                                        "Tianhuadong",
+                                        "Dazhuang",
+                                        "Songping")))
 
+ggplot(Site_river_distance) +
+  aes(Site, Distance)+
+  geom_bar(stat = "identity") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 13), 
+        axis.text.y = element_text(size = 13),
+        axis.title.y = element_text(size = 14),
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_line(color = "white")) +
+  labs(x = "",
+       y = "Distance (m)")
 
-
-
-
-
-
-
-
-
-
-
+ggsave(filename = "Site_river_distance.png", width = 3, height = 5, dpi = 400, bg = "white")
 
 
 
