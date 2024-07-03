@@ -133,8 +133,7 @@ Resharpening_df <-
 plot_resharpening <- 
   ggplot(Resharpening_df) +
   aes(x = id, 
-      y = angle,
-      color = id) +
+      y = angle) +
   geom_boxplot(outliers = FALSE) +
   geom_quasirandom(alpha = 0.2, 
                    size =1.5) +
@@ -144,10 +143,11 @@ plot_resharpening <-
              size = 2.5, 
              color = "black", 
              show.legend = FALSE) +
-  scale_color_manual(values = c(met.brewer("Nattier", 4)[1:2])) +
   xlab("") +
   ylab("Edge angle & EPA") +
-  theme_minimal(base_size = base_size_value) +
+  theme_bw(base_size = base_size_value) +
+  theme(panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_line(color = "white")) +
   theme(legend.position = "none")
 
 t.test(angle ~ factor(id), data = Resharpening_df )
@@ -176,7 +176,7 @@ Edge_angle_df <-
 
 plot_edge_angle <- 
   ggplot(Edge_angle_df, 
-         aes(x = id, y = ave, color = id)) +
+         aes(x = id, y = ave)) +
   geom_boxplot(outliers = FALSE) +
   geom_quasirandom(alpha = 0.2, 
                    size =1.5) +
@@ -186,10 +186,11 @@ plot_edge_angle <-
              size = 2.5, 
              color = "black", 
              show.legend = FALSE) +
-  scale_color_manual(values = c(met.brewer("Nattier", 4)[1:2])) +
   xlab("") +
   ylab("Edge angle") +
-  theme_minimal(base_size = base_size_value) +
+  theme_bw(base_size = base_size_value) +
+  theme(panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_line(color = "white")) +
   theme(legend.position = "none")
 
 ggsave(filename = "RR.png", width = 6, height = 8, dpi = 800, bg = "white")
@@ -216,7 +217,7 @@ giur_df <-
 
 plot_giur <- 
   ggplot(giur_df) +
-  aes(id, giur, color = id) +
+  aes(id, giur) +
   geom_boxplot(outliers = FALSE) +
   geom_quasirandom(alpha = 0.2, 
                    size =1.5) +
@@ -226,10 +227,11 @@ plot_giur <-
              size = 2.5, 
              color = "black", 
              show.legend = FALSE) +
-  scale_color_manual(values = c(met.brewer("Nattier", 4)[1:2])) +
   xlab("") +
   ylab("Mean GIUR") +
-  theme_minimal(base_size = base_size_value) +
+  theme_bw(base_size = base_size_value) +
+  theme(panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_line(color = "white")) +
   theme(legend.position = "none")
 
 ggsave(filename = "GIUR.png", width = 6, height = 8, dpi = 800, bg = "white")
@@ -247,8 +249,7 @@ tools_df$id <- factor(tools_df$id, levels = c("Quina scraper",
 plot_thick <- 
 ggplot(tools_df) +
   aes(reorder(id, -Thickness), 
-      Thickness, 
-      color = id) +
+      Thickness) +
   geom_boxplot(outliers = FALSE) +
   geom_quasirandom(alpha = 0.2, size =1.5) +
   geom_point(stat = "summary", 
@@ -257,10 +258,11 @@ ggplot(tools_df) +
              size = 2.5, 
              color = "black", 
              show.legend = FALSE) +
-  scale_color_manual(values = c(met.brewer("Nattier", 4))) +
   xlab("") +
   ylab("Thickness (mm)") +
-  theme_minimal(base_size = base_size_value) +
+  theme_bw(base_size = base_size_value) +
+  theme(panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_line(color = "white")) +
   theme(legend.position = "none")
   
 
@@ -285,7 +287,7 @@ plot_grid(plot_thick,
           plot_edge_angle,
           plot_giur,
           plot_resharpening,
-           nrow = 1
+          nrow = 1
           )
 
 ggsave(filename = "panel_thick_edgeangle_retouch.png", 
