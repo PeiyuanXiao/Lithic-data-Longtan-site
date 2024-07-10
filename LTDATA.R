@@ -134,19 +134,22 @@ plot_resharpening <-
   ggplot(Resharpening_df) +
   aes(x = id, 
       y = angle) +
-  geom_boxplot(outliers = FALSE) +
+  geom_boxplot(outliers = FALSE, lwd = 1, fatten = 1) +
   geom_quasirandom(alpha = 0.2, 
-                   size =1.5) +
+                   size = 3) +
   geom_point(stat = "summary", 
              fun = "mean", 
              shape = 19, 
-             size = 2.5, 
+             size = 5, 
              color = "black", 
              show.legend = FALSE) +
   xlab("") +
   ylab("Edge angle & EPA") +
   theme_bw(base_size = base_size_value) +
-  theme(panel.grid.major = element_line(color = "white"), 
+  theme(axis.text.x = element_text(size = 13),
+        axis.text.y = element_text(size = 13),
+        axis.title.y = element_text(size = 14),
+        panel.grid.major = element_line(color = "white"), 
         panel.grid.minor = element_line(color = "white")) +
   theme(legend.position = "none")
 
@@ -177,19 +180,22 @@ Edge_angle_df <-
 plot_edge_angle <- 
   ggplot(Edge_angle_df, 
          aes(x = id, y = ave)) +
-  geom_boxplot(outliers = FALSE) +
+  geom_boxplot(outliers = FALSE, lwd = 1, fatten = 1) +
   geom_quasirandom(alpha = 0.2, 
-                   size =1.5) +
+                   size = 3) +
   geom_point(stat = "summary", 
              fun = "mean", 
              shape = 19, 
-             size = 2.5, 
+             size = 5, 
              color = "black", 
              show.legend = FALSE) +
   xlab("") +
   ylab("Edge angle") +
   theme_bw(base_size = base_size_value) +
-  theme(panel.grid.major = element_line(color = "white"), 
+  theme(axis.text.x = element_text(size = 13),
+        axis.text.y = element_text(size = 13),
+        axis.title.y = element_text(size = 14),
+        panel.grid.major = element_line(color = "white"), 
         panel.grid.minor = element_line(color = "white")) +
   theme(legend.position = "none")
 
@@ -218,19 +224,22 @@ giur_df <-
 plot_giur <- 
   ggplot(giur_df) +
   aes(id, giur) +
-  geom_boxplot(outliers = FALSE) +
+  geom_boxplot(outliers = FALSE, lwd = 1, fatten = 1) +
   geom_quasirandom(alpha = 0.2, 
-                   size =1.5) +
+                   size = 3) +
   geom_point(stat = "summary", 
              fun = "mean", 
              shape = 19, 
-             size = 2.5, 
+             size = 5, 
              color = "black", 
              show.legend = FALSE) +
   xlab("") +
   ylab("Mean GIUR") +
   theme_bw(base_size = base_size_value) +
-  theme(panel.grid.major = element_line(color = "white"), 
+  theme(axis.text.x = element_text(size = 13),
+        axis.text.y = element_text(size = 13),
+        axis.title.y = element_text(size = 14),
+        panel.grid.major = element_line(color = "white"), 
         panel.grid.minor = element_line(color = "white")) +
   theme(legend.position = "none")
 
@@ -250,18 +259,21 @@ plot_thick <-
 ggplot(tools_df) +
   aes(reorder(id, -Thickness), 
       Thickness) +
-  geom_boxplot(outliers = FALSE) +
-  geom_quasirandom(alpha = 0.2, size =1.5) +
+  geom_boxplot(outliers = FALSE, lwd = 1, fatten = 1) +
+  geom_quasirandom(alpha = 0.2, size = 3) +
   geom_point(stat = "summary", 
              fun = "mean", 
              shape = 19, 
-             size = 2.5, 
+             size = 5, 
              color = "black", 
              show.legend = FALSE) +
   xlab("") +
   ylab("Thickness (mm)") +
   theme_bw(base_size = base_size_value) +
-  theme(panel.grid.major = element_line(color = "white"), 
+  theme(axis.text.x = element_text(size = 13),
+        axis.text.y = element_text(size = 13),
+        axis.title.y = element_text(size = 14),
+        panel.grid.major = element_line(color = "white"), 
         panel.grid.minor = element_line(color = "white")) +
   theme(legend.position = "none")
   
@@ -291,5 +303,5 @@ plot_grid(plot_thick,
           )
 
 ggsave(filename = "panel_thick_edgeangle_retouch.png", 
-       width = 17, height = 3, dpi = 800, bg = "white")
+       width = 18, height = 5, dpi = 800, bg = "white")
 
