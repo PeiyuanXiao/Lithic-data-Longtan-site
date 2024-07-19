@@ -3,6 +3,7 @@ library(tidyverse)
 library(ggpmisc)
 library(forcats)
 library(patchwork)
+library("ggtext")
 
 # Cores-------------------------------------------------------------------------------
 
@@ -585,103 +586,30 @@ ggsave(filename = "Tool_size.png", width = 8, height = 6, dpi = 800, bg = "white
 # Sites to river distance-------------------------------------------------------------------------
 
 Site_river_distance <- read_excel("Site_river_distance.xlsx", skip = 0) %>%
-  mutate(Site = factor(Site, levels = c("Guanshan", 
-                                        "Longtan", 
-                                        "Tianhuadong",
+  mutate(Site = factor(Site, levels = c("Tianhuadong",
                                         "Dazhuang",
-                                        "Songping")))
+                                        "Longtan", 
+                                        "Songping",
+                                        "Guanshan")))
 
 ggplot(Site_river_distance) +
   aes(Site, Distance)+
   geom_bar(stat = "identity") +
   theme_bw() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 13), 
-        axis.text.y = element_text(size = 13),
-        axis.title.y = element_text(size = 14),
+  theme(axis.text.x = element_markdown(angle = 45, hjust = 1, size = 15), 
+        axis.text.y = element_text(size = 15),
+        axis.title.y = element_text(size = 16.5),
         panel.grid.major = element_line(color = "white"), 
         panel.grid.minor = element_line(color = "white")) +
+  scale_x_discrete(labels = c("Tianhuadong", 
+                              "Dazhuang", 
+                              "**Longtan**", 
+                              "Songping", 
+                              "Guanshan")) +
   labs(x = "",
-       y = "Distance (m)")
+       y = "Distance to river (m)")
 
-ggsave(filename = "Site_river_distance.png", width = 3, height = 5, dpi = 400, bg = "white")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-=======
->>>>>>> 87e1b99ef01852ad6c34c2ba7aa1ed90d083084c
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ggsave(filename = "Site_river_distance.png", width = 4, height = 5.5, dpi = 400, bg = "white")
 
 
 

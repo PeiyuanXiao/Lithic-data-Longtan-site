@@ -1,5 +1,6 @@
 library("readxl")
 library("dunn.test")
+library("ggdist")
 library("MetBrewer")
 
 # import the data 
@@ -82,7 +83,7 @@ res.man <-
 summary(res.man)
 summary.aov(res.man)
 
-# thicknes -----------------------------------------------------
+# Thickness -----------------------------------------------------
 
 # Quina scrapers are the most diagnostic type and often show 
 # significantly larger thickness values 
@@ -111,24 +112,64 @@ kruskal.test(Thickness ~ factor(id), data = tools_df)
 
 # Resharpening-------------------------------------------------------
 
-Resharpening_df <- 
-  bind_rows(.id = "id",
-            list( `Quina scrapers` = 
-                    qn_scrapers_Edge %>%
-                    select(a = ...20, b =  ...40, c = ...60) %>%
-                    mutate(a = parse_number(a),
-                           b = parse_number(b),
-                           c = parse_number(c)) %>%
-                    rowwise() %>%
-                    mutate(angle = mean(c_across(c("a", "b", "c")), na.rm = TRUE)),
-                  `Reshapening flakes` = 
-                    resharpening %>%
-                    select(angle = EPA) %>% drop_na()
-            ))
+remove_outliers <- function(df, col) {
+  Q1 <- quantile(df[[col]], 0.25, na.rm = TRUE)
+  Q3 <- quantile(df[[col]], 0.75, na.rm = TRUE)
+  IQR <- Q3 - Q1
+  lower_bound <- Q1 - 1.5 * IQR
+  upper_bound <- Q3 + 1.5 * IQR
+  df %>% filter(df[[col]] >= lower_bound & df[[col]] <= upper_bound)
+}
+
+Quina_scrapers_df <- qn_scrapers_Edge %>%
+  select(a = ...20, b = ...40, c = ...60) %>%
+  mutate(a = parse_number(a),
+         b = parse_number(b),
+         c = parse_number(c)) %>%
+  rowwise() %>%
+  mutate(angle = mean(c_across(c("a", "b", "c")), na.rm = TRUE)) %>%
+  ungroup() %>%
+  remove_outliers("angle") %>%
+  mutate(id = "Quina scrapers")
+
+Reshapening_flakes_df <- resharpening %>%
+  select(angle = EPA) %>%
+  drop_na() %>%
+  remove_outliers("angle") %>%
+  mutate(id = "Resharpening flakes")
+Resharpening_df <- bind_rows(Quina_scrapers_df, Reshapening_flakes_df)
+Resharpening_df$id <- factor(Resharpening_df$id, levels = c("Quina scrapers", "Resharpening flakes"))
+
 
 # The median exterior platform angle for resharpening 
 # flakes is 71°, with no significant difference observed 
 # from the edge angle of Quina scrapers  
+
+colors <- c("#68A7BE", "#EE7E77")
+
+plot_resharpening <- 
+  ggplot(Resharpening_df, fill = id, aes(x = id, y = angle)) +
+  stat_halfeye(mapping = aes(fill = id), alpha = 1, adjust = 0.5, width = 0.35, .width = 0, justification = -0.4) +
+  geom_errorbar(mapping = aes(color = id), stat = "boxplot", width = 0.1, linewidth = 1, position = position_dodge(width = 0.1)) +
+  geom_boxplot(mapping = aes(color = id), width = 0.2, size = 1, outlier.shape = NA, alpha = 1) +  
+  geom_jitter(mapping = aes(color = id), alpha = 0.4, size = 3, position = position_nudge(-0.2)) +
+  geom_point(stat = "summary", fun = "mean", shape = 19, size = 3, color = "black", show.legend = FALSE) +
+  geom_vline(xintercept = 1.55, linetype = "dashed", color = "black", size = 0.5) +
+  scale_fill_manual(values = colors) +
+  scale_color_manual(values = colors) +
+  scale_x_discrete(limits = c("Quina scrapers", "Resharpening flakes"), 
+                   expand = expansion(add = c(0.5, 0.5))) +
+  xlab("") +
+  ylab("Edge angle/EPA (°)") +
+  theme_bw(base_size = base_size_value) +
+  theme(axis.text.x = element_text(size = 16),
+        axis.text.y = element_text(size = 16),
+        axis.title.y = element_text(size = 18),
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_line(color = "white")) +
+  theme(legend.position = "none")
+
+
 
 plot_resharpening <- 
   ggplot(Resharpening_df) +
@@ -161,40 +202,52 @@ t.test(angle ~ factor(id), data = Resharpening_df )
 # (mean=70.4°; sd=7.6°), which are significantly higher
 # than that of ordinary scrapers
 
-Edge_angle_df <- 
-  bind_rows(.id = "id",
-            list( `Quina scrapers` = 
-                    qn_scrapers_Edge %>%
-                    select(a = ...20, b =  ...40, c = ...60) %>%
-                    mutate(a = parse_number(a),
-                           b = parse_number(b),
-                           c = parse_number(c)) %>%
-                    rowwise() %>%
-                    mutate(ave = mean(c_across(c("a", "b", "c")), na.rm = TRUE)),
-                  Scraper = 
-                    scraper %>%
-                    mutate(ave = parse_number(...20)) %>%
-                    select(ave)
-            ))
+remove_outliers <- function(df, col) {
+  Q1 <- quantile(df[[col]], 0.25, na.rm = TRUE)
+  Q3 <- quantile(df[[col]], 0.75, na.rm = TRUE)
+  IQR <- Q3 - Q1
+  lower_bound <- Q1 - 1.5 * IQR
+  upper_bound <- Q3 + 1.5 * IQR
+  df %>% filter(df[[col]] >= lower_bound & df[[col]] <= upper_bound)
+}
 
+Quina_scrapers_df <- qn_scrapers_Edge %>%
+  select(a = ...20, b = ...40, c = ...60) %>%
+  mutate(a = parse_number(a),
+         b = parse_number(b),
+         c = parse_number(c)) %>%
+  rowwise() %>%
+  mutate(ave = mean(c_across(c("a", "b", "c")), na.rm = TRUE)) %>%
+  ungroup() %>%
+  mutate(id = "Quina scrapers") %>%
+  remove_outliers("ave")
+
+Ordinary_scrapers_df <- scraper %>%
+  mutate(ave = parse_number(...20)) %>%
+  select(ave) %>%
+  mutate(id = "Ordinary scrapers") %>%
+  remove_outliers("ave")
+Edge_angle_df <- bind_rows(Quina_scrapers_df, Ordinary_scrapers_df)
+Edge_angle_df$id <- factor(Edge_angle_df$id, levels = c("Quina scrapers", "Ordinary scrapers"))
+
+colors <- c("#68A7BE", "#EE7E77")
 plot_edge_angle <- 
-  ggplot(Edge_angle_df, 
-         aes(x = id, y = ave)) +
-  geom_boxplot(outliers = FALSE, lwd = 1, fatten = 1) +
-  geom_quasirandom(alpha = 0.2, 
-                   size = 3) +
-  geom_point(stat = "summary", 
-             fun = "mean", 
-             shape = 19, 
-             size = 5, 
-             color = "black", 
-             show.legend = FALSE) +
+  ggplot(Edge_angle_df, fill = id, aes(x = id, y = ave)) +
+  stat_halfeye(mapping = aes(fill = id), alpha = 1, adjust = 0.5, width = 0.35, .width = 0, justification = -0.4) +
+  geom_errorbar(mapping = aes(color = id), stat = "boxplot", width = 0.1, linewidth = 1, position = position_dodge(width = 0.75)) +
+  geom_boxplot(mapping = aes(color = id), width = 0.2, size = 1, outlier.shape = NA, alpha = 1) +  
+  geom_jitter(mapping = aes(color = id), alpha = 0.4, size = 3, position = position_nudge(-0.2)) +
+  geom_point(stat = "summary", fun = "mean", shape = 19, size = 3, color = "black", show.legend = FALSE) +
+  scale_fill_manual(values = colors) +
+  scale_color_manual(values = colors) +
+  geom_vline(xintercept = 1.55, linetype = "dashed", color = "black", size = 0.5) +
+  scale_x_discrete(expand = expansion(add = c(0.5, 0.5))) +
   xlab("") +
-  ylab("Edge angle") +
+  ylab("Edge angle (°)") +
   theme_bw(base_size = base_size_value) +
-  theme(axis.text.x = element_text(size = 13),
-        axis.text.y = element_text(size = 13),
-        axis.title.y = element_text(size = 14),
+  theme(axis.text.x = element_text(size = 16),
+        axis.text.y = element_text(size = 16),
+        axis.title.y = element_text(size = 18),
         panel.grid.major = element_line(color = "white"), 
         panel.grid.minor = element_line(color = "white")) +
   theme(legend.position = "none")
@@ -211,34 +264,36 @@ t.test(ave ~ factor(id), data = Edge_angle_df)
 
 giur_df <- 
   bind_rows(.id = "id",
-            list( `Quina scraper` = 
+            list( `Quina scrapers` = 
                     qn_scrapers_reduction %>%
                     select(...5),
-                  Scraper = 
+                  `Ordinary scrapers` = 
                     scraper %>%
-                    select(...33)
+                    select(...34)
             )) %>%
   mutate(giur = parse_number(...1))
 
+giur_df$id <- factor(giur_df$id, levels = c("Quina scrapers", 
+                                            "Ordinary scrapers"))
 
+colors <- c("#68A7BE", "#EE7E77")
 plot_giur <- 
-  ggplot(giur_df) +
-  aes(id, giur) +
-  geom_boxplot(outliers = FALSE, lwd = 1, fatten = 1) +
-  geom_quasirandom(alpha = 0.2, 
-                   size = 3) +
-  geom_point(stat = "summary", 
-             fun = "mean", 
-             shape = 19, 
-             size = 5, 
-             color = "black", 
-             show.legend = FALSE) +
+  ggplot(giur_df, fill = id, aes(x = id, y = giur)) +
+  stat_halfeye(mapping = aes(fill = id), alpha = 1, adjust = 0.5, width = 0.35, .width = 0, justification = -0.4) +
+  geom_errorbar(mapping = aes(color = id), stat = "boxplot", width = 0.1, linewidth = 1, position = position_dodge(width = 0.75)) +
+  geom_boxplot(mapping = aes(color = id), width = 0.2, size = 1, outlier.shape = NA, alpha = 1) +  
+  geom_jitter(mapping = aes(color = id), alpha = 0.4, size = 3, position = position_nudge(-0.2)) +
+  geom_point(stat = "summary", fun = "mean", shape = 19, size = 3, color = "black", show.legend = FALSE) +
+  scale_fill_manual(values = colors) +
+  scale_color_manual(values = colors) +
+  geom_vline(xintercept = 1.55, linetype = "dashed", color = "black", size = 0.5) +
+  scale_x_discrete(expand = expansion(add = c(0.5, 0.5))) +
   xlab("") +
-  ylab("Mean GIUR") +
+  ylab("Reduction intensity") +
   theme_bw(base_size = base_size_value) +
-  theme(axis.text.x = element_text(size = 13),
-        axis.text.y = element_text(size = 13),
-        axis.title.y = element_text(size = 14),
+  theme(axis.text.x = element_text(size = 16),
+        axis.text.y = element_text(size = 16),
+        axis.title.y = element_text(size = 18),
         panel.grid.major = element_line(color = "white"), 
         panel.grid.minor = element_line(color = "white")) +
   theme(legend.position = "none")
@@ -248,31 +303,42 @@ ggsave(filename = "GIUR.png", width = 6, height = 8, dpi = 800, bg = "white")
 t.test(giur_df$giur, as.integer(factor(giur_df$id)))
 
 
-# Thickness-------------------------------------------------
+# Thickness box-plot-------------------------------------------------
 
-tools_df$id <- factor(tools_df$id, levels = c("Quina scraper", 
-                                              "Scraper", 
-                                              "Denticulate", 
-                                              "Notch"))
+Thickness_plot <-
+  bind_rows(
+    list(
+      `Quina scrapers` = qn_scrapers %>%
+        select(Length, Breadth, Thickness, Weight),
+      `Ordinary scrapers` = scraper %>%
+        select(Length, Breadth, Thickness, Weight)
+    ),
+    .id = "id"
+  ) %>%
+  drop_na()
 
+Thickness_plot$id <- factor(Thickness_plot$id, levels = c("Quina scraper", 
+                                              "Ordinary scrapers"))
+
+colors <- c("#68A7BE", "#EE7E77")
 plot_thick <- 
-ggplot(tools_df) +
-  aes(reorder(id, -Thickness), 
-      Thickness) +
-  geom_boxplot(outliers = FALSE, lwd = 1, fatten = 1) +
-  geom_quasirandom(alpha = 0.2, size = 3) +
-  geom_point(stat = "summary", 
-             fun = "mean", 
-             shape = 19, 
-             size = 5, 
-             color = "black", 
-             show.legend = FALSE) +
+ggplot(Thickness_plot, fill = id) +
+  aes(x = reorder(id, -Thickness), y = Thickness) +
+  stat_halfeye(mapping = aes(fill = id), alpha = 1, adjust = 0.5, width = 0.35, .width = 0, justification = -0.4) +
+  geom_errorbar(mapping = aes(color = id), stat = "boxplot", width = 0.1, linewidth = 1, position = position_dodge(width = 0.75)) +
+  geom_boxplot(mapping = aes(color = id), width = 0.2, size = 1, outlier.shape = NA, alpha = 1) +  
+  geom_jitter(mapping = aes(color = id), alpha = 0.4, size = 3, position = position_nudge(-0.2)) +
+  geom_point(stat = "summary", fun = "mean", shape = 19, size = 3, color = "black", show.legend = FALSE) +
+  scale_fill_manual(values = colors) +
+  scale_color_manual(values = colors) +
+  geom_vline(xintercept = 1.55, linetype = "dashed", color = "black", size = 0.5) +
+  scale_x_discrete(expand = expansion(add = c(0.5, 0.5))) +
   xlab("") +
   ylab("Thickness (mm)") +
   theme_bw(base_size = base_size_value) +
-  theme(axis.text.x = element_text(size = 13),
-        axis.text.y = element_text(size = 13),
-        axis.title.y = element_text(size = 14),
+  theme(axis.text.x = element_text(size = 16),
+        axis.text.y = element_text(size = 16),
+        axis.title.y = element_text(size = 18),
         panel.grid.major = element_line(color = "white"), 
         panel.grid.minor = element_line(color = "white")) +
   theme(legend.position = "none")
