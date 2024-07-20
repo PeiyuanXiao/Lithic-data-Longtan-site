@@ -162,34 +162,9 @@ plot_resharpening <-
   xlab("") +
   ylab("Edge angle/EPA (°)") +
   theme_bw(base_size = base_size_value) +
-  theme(axis.text.x = element_text(size = 16),
-        axis.text.y = element_text(size = 16),
+  theme(axis.text.x = element_text(size = 16, color = "black"),
+        axis.text.y = element_text(size = 16, color = "black"),
         axis.title.y = element_text(size = 18),
-        panel.grid.major = element_line(color = "white"), 
-        panel.grid.minor = element_line(color = "white")) +
-  theme(legend.position = "none")
-
-
-
-plot_resharpening <- 
-  ggplot(Resharpening_df) +
-  aes(x = id, 
-      y = angle) +
-  geom_boxplot(outliers = FALSE, lwd = 1, fatten = 1) +
-  geom_quasirandom(alpha = 0.2, 
-                   size = 3) +
-  geom_point(stat = "summary", 
-             fun = "mean", 
-             shape = 19, 
-             size = 5, 
-             color = "black", 
-             show.legend = FALSE) +
-  xlab("") +
-  ylab("Edge angle & EPA") +
-  theme_bw(base_size = base_size_value) +
-  theme(axis.text.x = element_text(size = 13),
-        axis.text.y = element_text(size = 13),
-        axis.title.y = element_text(size = 14),
         panel.grid.major = element_line(color = "white"), 
         panel.grid.minor = element_line(color = "white")) +
   theme(legend.position = "none")
@@ -245,8 +220,8 @@ plot_edge_angle <-
   xlab("") +
   ylab("Edge angle (°)") +
   theme_bw(base_size = base_size_value) +
-  theme(axis.text.x = element_text(size = 16),
-        axis.text.y = element_text(size = 16),
+  theme(axis.text.x = element_text(size = 16, color = "black"),
+        axis.text.y = element_text(size = 16, color = "black"),
         axis.title.y = element_text(size = 18),
         panel.grid.major = element_line(color = "white"), 
         panel.grid.minor = element_line(color = "white")) +
@@ -291,8 +266,8 @@ plot_giur <-
   xlab("") +
   ylab("Reduction intensity") +
   theme_bw(base_size = base_size_value) +
-  theme(axis.text.x = element_text(size = 16),
-        axis.text.y = element_text(size = 16),
+  theme(axis.text.x = element_text(size = 16, color = "black"),
+        axis.text.y = element_text(size = 16, color = "black"),
         axis.title.y = element_text(size = 18),
         panel.grid.major = element_line(color = "white"), 
         panel.grid.minor = element_line(color = "white")) +
@@ -317,7 +292,7 @@ Thickness_plot <-
   ) %>%
   drop_na()
 
-Thickness_plot$id <- factor(Thickness_plot$id, levels = c("Quina scraper", 
+Thickness_plot$id <- factor(Thickness_plot$id, levels = c("Quina scrapers", 
                                               "Ordinary scrapers"))
 
 colors <- c("#68A7BE", "#EE7E77")
@@ -336,9 +311,9 @@ ggplot(Thickness_plot, fill = id) +
   xlab("") +
   ylab("Thickness (mm)") +
   theme_bw(base_size = base_size_value) +
-  theme(axis.text.x = element_text(size = 16),
-        axis.text.y = element_text(size = 16),
-        axis.title.y = element_text(size = 18),
+  theme(axis.text.x = element_text(size = 16, color = "black"),
+        axis.text.y = element_text(size = 16, color = "black"),
+        axis.title.y = element_text(size = 18, color = "black"),
         panel.grid.major = element_line(color = "white"), 
         panel.grid.minor = element_line(color = "white")) +
   theme(legend.position = "none")
@@ -359,6 +334,7 @@ tools_df %>%
 
 
 #combine plots into one panel
+
 library(cowplot)
 
 plot_grid(plot_thick,
@@ -370,4 +346,10 @@ plot_grid(plot_thick,
 
 ggsave(filename = "panel_thick_edgeangle_retouch.png", 
        width = 18, height = 5, dpi = 800, bg = "white")
+
+
+
+
+
+
 
