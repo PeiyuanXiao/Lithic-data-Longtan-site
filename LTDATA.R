@@ -165,6 +165,7 @@ plot_resharpening <-
   theme(axis.text.x = element_text(size = 16, color = "black"),
         axis.text.y = element_text(size = 16, color = "black"),
         axis.title.y = element_text(size = 18),
+        axis.ticks.x = element_blank(), 
         panel.grid.major = element_line(color = "white"), 
         panel.grid.minor = element_line(color = "white")) +
   theme(legend.position = "none")
@@ -223,6 +224,7 @@ plot_edge_angle <-
   theme(axis.text.x = element_text(size = 16, color = "black"),
         axis.text.y = element_text(size = 16, color = "black"),
         axis.title.y = element_text(size = 18),
+        axis.ticks.x = element_blank(), 
         panel.grid.major = element_line(color = "white"), 
         panel.grid.minor = element_line(color = "white")) +
   theme(legend.position = "none")
@@ -269,6 +271,7 @@ plot_giur <-
   theme(axis.text.x = element_text(size = 16, color = "black"),
         axis.text.y = element_text(size = 16, color = "black"),
         axis.title.y = element_text(size = 18),
+        axis.ticks.x = element_blank(), 
         panel.grid.major = element_line(color = "white"), 
         panel.grid.minor = element_line(color = "white")) +
   theme(legend.position = "none")
@@ -314,6 +317,7 @@ ggplot(Thickness_plot, fill = id) +
   theme(axis.text.x = element_text(size = 16, color = "black"),
         axis.text.y = element_text(size = 16, color = "black"),
         axis.title.y = element_text(size = 18, color = "black"),
+        axis.ticks.x = element_blank(), 
         panel.grid.major = element_line(color = "white"), 
         panel.grid.minor = element_line(color = "white")) +
   theme(legend.position = "none")
