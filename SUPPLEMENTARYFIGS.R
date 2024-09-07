@@ -4,6 +4,7 @@ library(ggpmisc)
 library(forcats)
 library(patchwork)
 library("ggtext")
+library("cowplot")
 
 # Cores-------------------------------------------------------------------------------
 
@@ -610,6 +611,180 @@ ggplot(Site_river_distance) +
        y = "Distance to river (m)")
 
 ggsave(filename = "Site_river_distance.png", width = 4, height = 5.5, dpi = 400, bg = "white")
+
+# Taphonomic plots--------------------------------------------------------------
+
+Taphonomic <- read_excel("LT_taphonomic_information.xlsx", skip = 0)
+
+Taphonomic1 <- Taphonomic %>%
+  mutate(Strike = factor(Strike, levels = c("0-15°", 
+                                            "16-30°", 
+                                            "31-45°", 
+                                            "46-60°", 
+                                            "61-75°", 
+                                            "76-90°", 
+                                            "91-105°", 
+                                            "106-120°",
+                                            "121-135°",
+                                            "136-150°",
+                                            "151-165°",
+                                            "166-180°")))
+
+Strike_rose <- ggplot(Taphonomic1, 
+                      aes(Strike, Nstrike)) +
+  geom_col(fill = "#868686", 
+           color = "black", 
+           width = 0.8,
+           alpha = 0.6) + 
+  coord_polar() +
+  theme_minimal() +
+  theme(axis.text.x = element_text(size = 14,
+                                   color = "black"),axis.text.y = element_blank(), 
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        panel.grid.major = element_line(color = "gray"), 
+        panel.grid.minor = element_line(color = "gray")) +
+  ylim(0, max(Taphonomic$Nstrike)) 
+
+ggsave(filename = "Strike_rose.png", width = 6, height = 6, dpi = 600, bg = "white")
+
+Taphonomic2 <- Taphonomic %>%
+  mutate(Dip_direction = factor(Dip_direction, levels = c("0-30°", 
+                                            "31-60°", 
+                                            "61-90°", 
+                                            "91-120°", 
+                                            "121-150°", 
+                                            "151-180°", 
+                                            "181-210°", 
+                                            "211-240°",
+                                            "241-270°",
+                                            "271-300°",
+                                            "301-330°",
+                                            "331-360°")))
+
+DD_rose <- ggplot(Taphonomic2, 
+                      aes(Dip_direction, Ndd)) +
+  geom_col(fill = "#868686", 
+           color = "black", 
+           width = 0.8,
+           alpha = 0.6) + 
+  coord_polar() +
+  theme_minimal() +
+  theme(axis.text.x = element_text(size = 14,
+                                   color = "black"),axis.text.y = element_blank(), 
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        panel.grid.major = element_line(color = "gray"), 
+        panel.grid.minor = element_line(color = "gray"))
+
+ggsave(filename = "DD_rose.png", width = 6, height = 6, dpi = 600, bg = "white")
+
+
+AD_df <- Taphonomic %>%
+  filter(!is.na(Angle_of_dip) & !is.na(Nad))
+
+AD_rose <- ggplot(AD_df, 
+                      aes(Angle_of_dip, Nad)) +
+  geom_col(fill = "#868686", 
+           color = "black", 
+           width = 0.5,
+           alpha = 0.6) + 
+  coord_polar() +
+  theme_minimal() +
+  theme(axis.text.x = element_text(size = 14,
+                                   color = "black"),axis.text.y = element_blank(), 
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        panel.grid.major = element_line(color = "gray"), 
+        panel.grid.minor = element_line(color = "gray"))
+
+ggsave(filename = "AD_rose.png", width = 6, height = 6, dpi = 600, bg = "white")
+
+
+Weather_df <- Taphonomic %>%
+  filter(!is.na(Weathering) & !is.na(Nweather))
+
+Weather_df1 <- Weather_df %>%
+  mutate(Weathering = factor(Weathering, levels = c("Fresh", 
+                                                    "Slight", 
+                                                    "Moderate", 
+                                                    "High")))
+
+Weather_rose <- ggplot(Weather_df1, 
+                  aes(Weathering, Nweather)) +
+  geom_col(fill = "#868686", 
+           color = "black", 
+           width = 0.5,
+           alpha = 0.6) + 
+  coord_polar() +
+  theme_minimal() +
+  theme(axis.text.x = element_text(size = 14,
+                                   color = "black"),
+        axis.text.y = element_blank(), 
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        panel.grid.major = element_line(color = "gray"), 
+        panel.grid.minor = element_line(color = "gray"))
+
+ggsave(filename = "Weather_rose.png", width = 6, height = 6, dpi = 600, bg = "white")
+
+
+
+Size_df <- Taphonomic %>%
+  filter(!is.na(Size) & !is.na(Nsize))
+
+Size_df$Size <- factor(Size_df$Size, levels = c("< 3 cm", "3-5 cm", "5-7 cm", "7-10 cm", "> 10 cm"))
+
+Size_line <- ggplot(Size_df, aes(Size, Nsize, group = 1)) +
+  geom_line(linetype = "dashed")+
+  geom_point(size = 3) +
+  theme_bw() +
+  theme(axis.text.x = element_text(size = 14,
+                                   color = "black"),
+        axis.text.y = element_text(size = 14,
+                                   color = "black"),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())
+  
+  
+ggsave(filename = "Size_line.png", width = 8, height = 4, dpi = 600, bg = "white")
+
+
+
+Weather_df <- Taphonomic %>%
+  filter(!is.na(Weathering) & !is.na(Nweather))
+
+Weather_rose <- ggplot(Weather_df, 
+                       aes("", Nweather, fill = Weathering)) +
+  geom_col(fill = "#868686", 
+           color = "black", 
+           width = 0.5,
+           alpha = 0.6) + 
+  coord_polar(theta = "y", start = 0) +
+  theme_void()
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

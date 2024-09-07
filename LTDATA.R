@@ -2,6 +2,8 @@ library("readxl")
 library("dunn.test")
 library("ggdist")
 library("MetBrewer")
+library("ggbeeswarm")  
+library("cowplot")
 
 # import the data 
 qn_scrapers <-  read_excel("Longtan site lithic data-Quina scrapers.xlsx", skip = 1)
@@ -151,8 +153,8 @@ plot_resharpening <-
   ggplot(Resharpening_df, fill = id, aes(x = id, y = angle)) +
   geom_errorbar(mapping = aes(color = id), stat = "boxplot", width = 0.1, linewidth = 1, position = position_dodge(width = 0.1)) +
   geom_boxplot(mapping = aes(color = id), width = 0.5, size = 1, outlier.shape = NA, alpha = 1) +  
-  geom_quasirandom(mapping = aes(color = id), cex = 3, size = 2, alpha = 0.5) +
-  geom_point(stat = "summary", fun = "mean", shape = 19, size = 3, color = "black", show.legend = FALSE) +
+  geom_quasirandom(mapping = aes(color = id), cex = 2.2, width = 0.4, alpha = 0.5, method = "quasirandom", varwidth = TRUE) +
+  geom_point(stat = "summary", fun = "mean", shape = 19, size = 5, color = "#3B3B3B", show.legend = FALSE) +
   scale_fill_manual(values = colors) +
   scale_color_manual(values = colors) +
   scale_x_discrete(limits = c("Quina scrapers", "Resharpening flakes"), 
@@ -167,6 +169,29 @@ plot_resharpening <-
         panel.grid.major = element_line(color = "white"), 
         panel.grid.minor = element_line(color = "white")) +
   theme(legend.position = "none")
+
+plot_resharpening1 <- 
+  ggplot(Resharpening_df, fill = id, aes(x = id, y = angle)) +
+  stat_halfeye(mapping = aes(fill = id), alpha = 1, adjust = 0.5, width = 0.3, .width = 0, justification = -0.5) +
+  geom_errorbar(mapping = aes(color = id), stat = "boxplot", width = 0.1, linewidth = 1, position = position_dodge(width = 0.1)) +
+  geom_boxplot(mapping = aes(color = id), width = 0.2, size = 1, outlier.shape = NA, alpha = 1) +  
+  geom_point(stat = "summary", fun = "mean", shape = 19, size = 3, color = "black", show.legend = FALSE) +
+  geom_vline(xintercept = 1.55, linetype = "dashed", color = "black", size = 0.5) +
+  scale_fill_manual(values = colors) +
+  scale_color_manual(values = colors) +
+  scale_x_discrete(limits = c("Quina scrapers", "Resharpening flakes"), 
+                   expand = expansion(add = c(0.5, 0.5))) +
+  xlab("") +
+  ylab("Edge angle/EPA (°)") +
+  theme_bw(base_size = base_size_value) +
+  theme(axis.text.x = element_text(size = 16, color = "black"),
+        axis.text.y = element_text(size = 16, color = "black"),
+        axis.title.y = element_text(size = 18),
+        axis.ticks.x = element_blank(), 
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_line(color = "white")) +
+  theme(legend.position = "none")
+
 
 t.test(angle ~ factor(id), data = Resharpening_df )
 
@@ -209,10 +234,31 @@ plot_edge_angle <-
   ggplot(Edge_angle_df, fill = id, aes(x = id, y = ave)) +
   geom_errorbar(mapping = aes(color = id), stat = "boxplot", width = 0.1, linewidth = 1, position = position_dodge(width = 0.75)) +
   geom_boxplot(mapping = aes(color = id), width = 0.5, size = 1, outlier.shape = NA, alpha = 1) +  
-  geom_quasirandom(mapping = aes(color = id), cex = 3, size = 2, alpha = 0.5) +
+  geom_quasirandom(mapping = aes(color = id), cex = 2.2, width = 0.4, alpha = 0.5, method = "quasirandom", varwidth = TRUE) +
+  geom_point(stat = "summary", fun = "mean", shape = 19, size = 5, color = "#3B3B3B", show.legend = FALSE) +
+  scale_fill_manual(values = colors) +
+  scale_color_manual(values = colors) +
+  scale_x_discrete(expand = expansion(add = c(0.5, 0.5))) +
+  xlab("") +
+  ylab("Edge angle (°)") +
+  theme_bw(base_size = base_size_value) +
+  theme(axis.text.x = element_text(size = 16, color = "black"),
+        axis.text.y = element_text(size = 16, color = "black"),
+        axis.title.y = element_text(size = 18),
+        axis.ticks.x = element_blank(), 
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_line(color = "white")) +
+  theme(legend.position = "none")
+
+plot_edge_angle1 <- 
+ggplot(Edge_angle_df, fill = id, aes(x = id, y = ave)) +
+  stat_halfeye(mapping = aes(fill = id), alpha = 1, adjust = 0.5, width = 0.3, .width = 0, justification = -0.5) +
+  geom_errorbar(mapping = aes(color = id), stat = "boxplot", width = 0.1, linewidth = 1, position = position_dodge(width = 0.75)) +
+  geom_boxplot(mapping = aes(color = id), width = 0.2, size = 1, outlier.shape = NA, alpha = 1) +  
   geom_point(stat = "summary", fun = "mean", shape = 19, size = 3, color = "black", show.legend = FALSE) +
   scale_fill_manual(values = colors) +
   scale_color_manual(values = colors) +
+  geom_vline(xintercept = 1.55, linetype = "dashed", color = "black", size = 0.5) +
   scale_x_discrete(expand = expansion(add = c(0.5, 0.5))) +
   xlab("") +
   ylab("Edge angle (°)") +
@@ -254,10 +300,31 @@ plot_giur <-
   ggplot(giur_df, fill = id, aes(x = id, y = giur)) +
   geom_errorbar(mapping = aes(color = id), stat = "boxplot", width = 0.1, linewidth = 1, position = position_dodge(width = 0.75)) +
   geom_boxplot(mapping = aes(color = id), width = 0.5, size = 1, outlier.shape = NA, alpha = 1) +  
-  geom_quasirandom(mapping = aes(color = id), cex = 3, size = 2, alpha = 0.5) +
+  geom_quasirandom(mapping = aes(color = id), cex = 2.2, width = 0.4, alpha = 0.5, method = "quasirandom", varwidth = TRUE) +
+  geom_point(stat = "summary", fun = "mean", shape = 19, size = 5, color = "#3B3B3B", show.legend = FALSE) +
+  scale_fill_manual(values = colors) +
+  scale_color_manual(values = colors) +
+  scale_x_discrete(expand = expansion(add = c(0.5, 0.5))) +
+  xlab("") +
+  ylab("Reduction intensity") +
+  theme_bw(base_size = base_size_value) +
+  theme(axis.text.x = element_text(size = 16, color = "black"),
+        axis.text.y = element_text(size = 16, color = "black"),
+        axis.title.y = element_text(size = 18),
+        axis.ticks.x = element_blank(), 
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_line(color = "white")) +
+  theme(legend.position = "none")
+
+plot_giur1 <- 
+ggplot(giur_df, fill = id, aes(x = id, y = giur)) +
+  stat_halfeye(mapping = aes(fill = id), alpha = 1, adjust = 0.5, width = 0.3, .width = 0, justification = -0.5) +
+  geom_errorbar(mapping = aes(color = id), stat = "boxplot", width = 0.1, linewidth = 1, position = position_dodge(width = 0.75)) +
+  geom_boxplot(mapping = aes(color = id), width = 0.2, size = 1, outlier.shape = NA, alpha = 1) +  
   geom_point(stat = "summary", fun = "mean", shape = 19, size = 3, color = "black", show.legend = FALSE) +
   scale_fill_manual(values = colors) +
   scale_color_manual(values = colors) +
+  geom_vline(xintercept = 1.55, linetype = "dashed", color = "black", size = 0.5) +
   scale_x_discrete(expand = expansion(add = c(0.5, 0.5))) +
   xlab("") +
   ylab("Reduction intensity") +
@@ -298,7 +365,7 @@ ggplot(Thickness_plot, fill = id) +
   aes(x = reorder(id, -Thickness), y = Thickness) +
   geom_errorbar(mapping = aes(color = id), stat = "boxplot", width = 0.1, linewidth = 1, position = position_dodge(width = 0.75)) +
   geom_boxplot(mapping = aes(color = id), width = 0.5, size = 1, outlier.shape = NA, alpha = 1) +  
-  geom_quasirandom(mapping = aes(color = id), cex = 1.5, width = 0.4, alpha = 0.5, method = "quasirandom", varwidth = TRUE) +
+  geom_quasirandom(mapping = aes(color = id), cex = 2.2, width = 0.4, alpha = 0.5, method = "quasirandom", varwidth = TRUE) +
   geom_point(stat = "summary", fun = "mean", shape = 19, size = 5, color = "#3B3B3B", show.legend = FALSE) +
   scale_fill_manual(values = colors) +
   scale_color_manual(values = colors) +
@@ -314,26 +381,33 @@ ggplot(Thickness_plot, fill = id) +
         panel.grid.minor = element_line(color = "white")) +
   theme(legend.position = "none")
 
-
-  
-
- 
-
-library(ggbeeswarm)   
-
-tools_df %>%
-  pivot_longer(-id) %>%
-  ggplot() +
-  aes(id, value) +
-  geom_boxplot() +
-  geom_quasirandom(alpha = 0.2) +
-  facet_wrap( ~ name, scales = "free_y")
+plot_thick1 <- 
+ggplot(Thickness_plot, fill = id) +
+  aes(x = reorder(id, -Thickness), y = Thickness) +
+  stat_halfeye(mapping = aes(fill = id), alpha = 1, adjust = 0.5, width = 0.3, .width = 0, justification = -0.5) +
+  geom_errorbar(mapping = aes(color = id), stat = "boxplot", width = 0.1, linewidth = 1, position = position_dodge(width = 0.75)) +
+  geom_boxplot(mapping = aes(color = id), width = 0.2, size = 1, outlier.shape = NA, alpha = 1) +  
+  geom_point(stat = "summary", fun = "mean", shape = 19, size = 3, color = "black", show.legend = FALSE) +
+  scale_fill_manual(values = colors) +
+  scale_color_manual(values = colors) +
+  geom_vline(xintercept = 1.55, linetype = "dashed", color = "black", size = 0.5) +
+  scale_x_discrete(expand = expansion(add = c(0.5, 0.5))) +
+  xlab("") +
+  ylab("Thickness (mm)") +
+  theme_bw(base_size = base_size_value) +
+  theme(axis.text.x = element_text(size = 16, color = "black"),
+        axis.text.y = element_text(size = 16, color = "black"),
+        axis.title.y = element_text(size = 18, color = "black"),
+        axis.ticks.x = element_blank(), 
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_line(color = "white")) +
+  theme(legend.position = "none")
 
 
 
 #combine plots into one panel
 
-library(cowplot)
+
 
 plot_grid(plot_thick,
           plot_edge_angle,
@@ -342,10 +416,19 @@ plot_grid(plot_thick,
           nrow = 1
           )
 
+plot_grid(plot_thick1,
+          plot_edge_angle1,
+          plot_giur1,
+          plot_resharpening1,
+          nrow = 1
+)
+
+
 ggsave(filename = "panel_thick_edgeangle_retouch.png", 
        width = 18, height = 5, dpi = 800, bg = "white")
 
-
+ggsave(filename = "panel_thick_edgeangle_retouch1.png", 
+       width = 18, height = 5, dpi = 800, bg = "white")
 
 
 
