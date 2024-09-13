@@ -5,6 +5,7 @@ library(forcats)
 library(patchwork)
 library("ggtext")
 library("cowplot")
+library(scales)
 
 # Cores-------------------------------------------------------------------------------
 
@@ -710,23 +711,27 @@ Weather_df1 <- Weather_df %>%
                                                     "Moderate", 
                                                     "High")))
 
+Weather_df1 <- Weather_df1 %>%
+  mutate(Percentage = Nweather / sum(Nweather)) 
+
 Weather_rose <- ggplot(Weather_df1, 
-                  aes(Weathering, Nweather)) +
+                  aes(Weathering, Percentage)) +
   geom_col(fill = "#868686", 
            color = "black", 
            width = 0.5,
            alpha = 0.6) + 
-  coord_polar() +
-  theme_minimal() +
+  theme_bw() +
   theme(axis.text.x = element_text(size = 14,
                                    color = "black"),
-        axis.text.y = element_blank(), 
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank(),
+        axis.text.y = element_text(size = 14,
+                                   color = "black"),
         panel.grid.major = element_line(color = "gray"), 
-        panel.grid.minor = element_line(color = "gray"))
+        panel.grid.minor = element_line(color = "gray"),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank()) +
+  scale_y_continuous(labels = scales::percent)
 
-ggsave(filename = "Weather_rose.png", width = 6, height = 6, dpi = 600, bg = "white")
+ggsave(filename = "Weather_rose.png", width = 6, height = 4, dpi = 600, bg = "white")
 
 
 
@@ -735,7 +740,10 @@ Size_df <- Taphonomic %>%
 
 Size_df$Size <- factor(Size_df$Size, levels = c("< 3 cm", "3-5 cm", "5-7 cm", "7-10 cm", "> 10 cm"))
 
-Size_line <- ggplot(Size_df, aes(Size, Nsize, group = 1)) +
+Size_df <- Size_df %>%
+  mutate(Percentage1 = Nsize / sum(Nsize)) 
+
+Size_line <- ggplot(Size_df, aes(Size, Percentage1, group = 1)) +
   geom_line(linetype = "dashed")+
   geom_point(size = 3) +
   theme_bw() +
@@ -744,25 +752,15 @@ Size_line <- ggplot(Size_df, aes(Size, Nsize, group = 1)) +
         axis.text.y = element_text(size = 14,
                                    color = "black"),
         axis.title.x = element_blank(),
-        axis.title.y = element_blank())
+        axis.title.y = element_blank()) +
+  scale_y_continuous(labels = scales::percent)
   
   
-ggsave(filename = "Size_line.png", width = 8, height = 4, dpi = 600, bg = "white")
+ggsave(filename = "Size_line.png", width = 6, height = 4, dpi = 600, bg = "white")
 
 
 
-Weather_df <- Taphonomic %>%
-  filter(!is.na(Weathering) & !is.na(Nweather))
 
-Weather_rose <- ggplot(Weather_df, 
-                       aes("", Nweather, fill = Weathering)) +
-  geom_col(fill = "#868686", 
-           color = "black", 
-           width = 0.5,
-           alpha = 0.6) + 
-  coord_polar(theta = "y", start = 0) +
-  theme_void()
-  
 
 
 
