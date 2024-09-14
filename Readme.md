@@ -1,8 +1,8 @@
 ---
 title: "Readme"
-author: "Peiyuan Xiao"
-format: html
-editor: visual
+author: "PeiyuanXiao"
+date: "2024-09-14"
+output: html_document
 ---
 
 # **Research Compendium for: "Quina lithic technology in Southwest China and its relevance for Late Pleistocene human dynamics"**
@@ -42,8 +42,6 @@ l\. Centre for Archaeological Science, School of Earth, Atmospheric and Life Sci
 ✉ Correspondence: Fa-Hu Chen [fhchen\@itpcas.ac.cn](mailto:fhchen@itpcas.ac.cn)
 
 ### Online access:
-
-Zenodo DOI: <https://doi.org/10.5281/zenodo.13751712>
 
 The files at the URL above will generate the results as found in the publication. The files hosted at <https://github.com/PeiyuanXiao/Lithic-data-Longtan-site> are the development versions and may have changed since the paper was published.
 
