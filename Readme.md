@@ -7,7 +7,7 @@ output: github_markdown
 
 # **Research Compendium for: "Quina lithic technology in Southwest China and its relevance for Late Pleistocene human dynamics"**
 
-Qi-Jun Ruan^ab^, Hao Li^a^, Pei-Yuan Xiao^a^, Davide Delpiano^c^, Hélène Monod^d^, Alexandra Sumner^e^, Ke-Liang Zhao^f^, Jian-Hui Liu^b^, Zhen-Xiu Jia^a^, Chun-Xin Wang^g^, An-Chuan Fan^g^, Marie-Hélène Moncel^h^, Ben Marwick^i^, Marco Peresani^cj^, You-Ping Wang^k^, Bo Li^l^, Fa-Hu Chen^a^
+Qi-Jun Ruanᵃᵇ, Hao Liᵃ, Pei-Yuan Xiaoᵃ, Davide Delpianoᶜ, Hélène Monodᵈ, Alexandra Sumnerᵉ, Ke-Liang Zhaoᶠ, Jian-Hui Liuᵇ, Zhen-Xiu Jiaᵃ, Chun-Xin Wangᵍ, An-Chuan Fanᵍ, Marie-Hélène Moncelʰ, Ben Marwickⁱ, Marco Peresaniᶜʲ, You-Ping Wangᵏ, Bo Liˡ, Fa-Hu Chenᵃ
 
 a\. State Key Laboratory of Tibetan Plateau Earth System, Resources and Environment (TPESER), Institute of Tibetan Plateau Research, Chinese Academy of Sciences, Beijing, 100101, China
 
@@ -42,6 +42,8 @@ l\. Centre for Archaeological Science, School of Earth, Atmospheric and Life Sci
 ✉ Correspondence: Fa-Hu Chen [fhchen\@itpcas.ac.cn](mailto:fhchen@itpcas.ac.cn)
 
 ### Online access:
+
+Zenodo DOI: <https://doi.org/10.5281/zenodo.13762081>
 
 The files at the URL above will generate the results as found in the publication. The files hosted at <https://github.com/PeiyuanXiao/Lithic-data-Longtan-site> are the development versions and may have changed since the paper was published.
 
