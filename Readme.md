@@ -2,7 +2,7 @@
 title: "Readme"
 author: "PeiyuanXiao"
 date: "2024-09-14"
-output: html_document
+output: github_markdown
 ---
 
 # **Research Compendium for: "Quina lithic technology in Southwest China and its relevance for Late Pleistocene human dynamics"**
