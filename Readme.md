@@ -5,41 +5,41 @@ date: "2024-09-14"
 output: github_markdown
 ---
 
-# **Research Compendium for: "Quina lithic technology in Southwest China and its relevance for Late Pleistocene human dynamics"**
+# **Research Compendium for: "Quina lithic technology indicates diverse late-Pleistocene human dynamics in East Asia"**
 
-Qi-Jun Ruanᵃᵇ, Hao Liᵃ, Pei-Yuan Xiaoᵃ, Davide Delpianoᶜ, Hélène Monodᵈ, Alexandra Sumnerᵉ, Ke-Liang Zhaoᶠ, Jian-Hui Liuᵇ, Zhen-Xiu Jiaᵃ, Chun-Xin Wangᵍ, An-Chuan Fanᵍ, Marie-Hélène Moncelʰ, Ben Marwickⁱ, Marco Peresaniᶜʲ, You-Ping Wangᵏ, Bo Liˡ, Fa-Hu Chenᵃ
+Qi-Jun Ruan^a,b,1^, Hao Li^a,1,2^, Pei-Yuan Xiao^a,2^, Bo Li^c,2^, Hélène Monod^d,e^, Alexandra Sumner^f^, Ke-Liang Zhao^g^, Jian-Hui Liu^b^, Zhen-Xiu Jia^a^, Chun-Xin Wang^h^, An-Chuan Fan^h^, Marie-Hélène Moncel^i^, Ben Marwick^j^, Marco Peresani^k,l^, You-Ping Wang^m^, Fa-Hu Chen^a^, Davide Delpiano^k,2^
 
-a\. State Key Laboratory of Tibetan Plateau Earth System, Resources and Environment (TPESER), Institute of Tibetan Plateau Research, Chinese Academy of Sciences, Beijing, 100101, China
+^*a*^*State Key Laboratory of Tibetan Plateau Earth System, Resources and Environment (TPESER), Institute of Tibetan Plateau Research, Chinese Academy of Sciences, Beijing, 100101, China; ^b^Yunnan Provincial Institute of Cultural Relics and Archaeology, Kunming, 650118, China;*
 
-b\. Yunnan Provincial Institute of Cultural Relics and Archaeology, Kunming, 650118, China
+^*c*^*Centre for Archaeological Science, School of Earth, Atmospheric and Life Sciences, University of Wollongong, Wollongong, NSW, 2522, Australia;*
 
-c\. Department of Human Studies, Prehistoric and Anthropological Science Unit, University of Ferrara, Ferrara, 44121, Italy
+^*d*^*Universitat Rovira i Virgili, Department of History and Art History, Tarragona, Spain;*
 
-d\. France Musée de I’Homme, Paris, France
+^*e*^*UMR7194, Natural History of Prehistoric Man, CNRS, Nomad team, Department of Man and Environment, National Museum of Natural History, Paris;*
 
-e\. Department of Anthropology, DePaul University, Chicago, IL 60604, USA
+^*f*^*Department of Anthropology, DePaul University, Chicago, IL 60604, USA;*
 
-f\. Institute of Vertebrate Paleontology and Paleoanthropology, Chinese Academy of Sciences, Beijing, 100044, China
+^*g*^*Institute of Vertebrate Paleontology and Paleoanthropology, Chinese Academy of Sciences, Beijing, 100044, China;*
 
-g\. Department for the History of Science and Scientific Archaeology, University of Science and Technology of China, Hefei, 230026, China
+^*h*^*Department for the History of Science and Scientific Archaeology, University of Science and Technology of China, Hefei, 230026, China;*
 
-h\. UMR 7194 CNRS-National Museum of Natural History, Paris, France
+^*i*^*UMR 7194 CNRS-National Museum of Natural History, Paris, France;*
 
-i\. Department of Anthropology, University of Washington, Seattle, USA
+^*j*^*Department of Anthropology, University of Washington, Seattle, USA;*
 
-j\. CNR-Institute of Environmental Geology and Geoengineering, Lab. of Palynology and Palaeoecology, Research Group on Vegetation, Climate and Human Stratigraphy, Milan, 20126, Italy
+^*k*^*Department of Human Studies, Prehistoric and Anthropological Science Unit, University of Ferrara, Ferrara, 44121, Italy;*
 
-k\. School of Archaeology and Museology, Peking University, Beijing, 100871, China
+^*l*^*CNR-Institute of Environmental Geology and Geoengineering, Lab. of Palynology and Palaeoecology, Research Group on Vegetation, Climate and Human Stratigraphy, Milan, 20126, Italy;*
 
-l\. Centre for Archaeological Science, School of Earth, Atmospheric and Life Sciences, University of Wollongong, Wollongong, NSW, 2522, Australia
+^*m*^*School of Archaeology and Museology, Peking University, Beijing, 100871, China.*
 
 ✉ Correspondence: Hao Li [lihao\@itpcas.ac.cn](mailto:lihao@itpcas.ac.cn)
 
-✉ Correspondence: Davide Delpiano [dlpdvd\@unife.it](mailto:dlpdvd@unife.it)
+✉ Correspondence: Peiyuan Xiao [xiaopeiyuan\@itpcas.ac.cn](mailto:xiaopeiyuan@itpcas.ac.cn)
 
 ✉ Correspondence: Bo Li [bli\@uow.edu.au](mailto:bli@uow.edu.au)
 
-✉ Correspondence: Fa-Hu Chen [fhchen\@itpcas.ac.cn](mailto:fhchen@itpcas.ac.cn)
+✉ Correspondence: Davide Delpiano [dlpdvd\@unife.it](mailto:dlpdvd@unife.it)
 
 ### Online access:
 
@@ -49,7 +49,7 @@ The files at the URL above will generate the results as found in the publication
 
 ### Maintainer of this repository:
 
-Peiyuan Xiao [yuanxiao19927\@126.com](mailto:yuanxiao19927@126.com)
+Peiyuan Xiao [xiaopeiyuan\@itpcas.ac.cn](mailto:xiaopeiyuan@itpcas.ac.cn)
 
 Ben Marwick [bmarwick\@uw.edu](mailto:bmarwick@uw.edu)
 
