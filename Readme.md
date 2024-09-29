@@ -59,7 +59,7 @@ The Late Pleistocene of Eurasia is key for understanding interactions between ea
 
 ### Keywords:
 
-Middle Paleolithic; open-air site; early MIS 3; Late Pleistocene; hominins
+Middle Paleolithic; fluvial terrace; early MIS 3; Late Pleistocene; hominins
 
 ### R packages and their versions:
 
